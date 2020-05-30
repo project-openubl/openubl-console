@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders without crashing 1`] = `
+<Fragment>
+  <PageSection>
+    <Bullseye>
+      <EmptyState
+        variant="full"
+      >
+        <EmptyStateIcon
+          icon={[Function]}
+        />
+        <Title
+          headingLevel="h5"
+          size="lg"
+        >
+          Error 403 Not found! The resource you are trying to reach does not exists.
+        </Title>
+      </EmptyState>
+    </Bullseye>
+  </PageSection>
+</Fragment>
+`;

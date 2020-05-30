@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test snapshot 1`] = `
+<PageSidebar
+  nav={
+    <Unknown
+      aria-label="Nav"
+      id="nav-primary-simple"
+      theme="dark"
+    >
+      <NavList
+        ariaLeftScroll="Scroll left"
+        ariaRightScroll="Scroll right"
+        className=""
+        variant="default"
+      >
+        <NavItem>
+          <ForwardRef
+            activeClassName="pf-m-current"
+            to="/"
+          >
+            Menu1
+          </ForwardRef>
+        </NavItem>
+        <NavItem
+          itemId={0}
+        >
+          <ForwardRef
+            activeClassName="pf-m-current"
+            to="/menu2"
+          >
+            Menu2
+          </ForwardRef>
+        </NavItem>
+      </NavList>
+    </Unknown>
+  }
+  theme="dark"
+/>
+`;
