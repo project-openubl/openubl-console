@@ -1,0 +1,8 @@
+{
+  "realm": "openubl",
+  "auth-server-url": "http://localhost:8180/auth/",
+  "ssl-required": "external",
+  "resource": "openubl-console",
+  "public-client": true,
+  "confidential-port": 0
+}
