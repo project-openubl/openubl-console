@@ -4,7 +4,7 @@ cd cra-patternfly
 yarn add react-router-dom
 yarn add -D @types/react-router-dom
 
-yarn add @patternfly/patternfly @patternfly/react-core @patternfly/react-table
+yarn add @patternfly/react-core @patternfly/react-table
 
 yarn add enzyme enzyme-adapter-react-16 jest-enzyme
 yarn add -D @types/enzyme @types/enzyme-adapter-react-16
@@ -16,3 +16,7 @@ yarn add -D node-sass
 yarn add -D redux-devtools-extension
 
 yarn add axios
+
+
+yarn add husky lint-staged prettier
+yarn add keycloak-js

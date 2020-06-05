@@ -1,28 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test snapshot 1`] = `
-<PageSidebar
+<Component
   nav={
-    <Unknown
+    <Nav
       aria-label="Nav"
       id="nav-primary-simple"
+      onSelect={[Function]}
+      onToggle={[Function]}
       theme="dark"
     >
       <NavList
         ariaLeftScroll="Scroll left"
         ariaRightScroll="Scroll right"
-        className=""
-        variant="default"
       >
-        <NavItem>
+        <Unknown>
           <ForwardRef
             activeClassName="pf-m-current"
             to="/"
           >
             Menu1
           </ForwardRef>
-        </NavItem>
-        <NavItem
+        </Unknown>
+        <Unknown
           itemId={0}
         >
           <ForwardRef
@@ -31,9 +31,9 @@ exports[`Test snapshot 1`] = `
           >
             Menu2
           </ForwardRef>
-        </NavItem>
+        </Unknown>
       </NavList>
-    </Unknown>
+    </Nav>
   }
   theme="dark"
 />

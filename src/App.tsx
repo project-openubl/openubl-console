@@ -11,11 +11,17 @@ const App: React.FC = () => {
   return (
     <React.Fragment>
       <HashRouter>
-        <SecuredComponent>
+        {process.env.REACT_APP_SECURED ? (
+          <SecuredComponent>
+            <DefaultLayout>
+              <AppRoutes />
+            </DefaultLayout>
+          </SecuredComponent>
+        ) : (
           <DefaultLayout>
             <AppRoutes />
           </DefaultLayout>
-        </SecuredComponent>
+        )}
       </HashRouter>
     </React.Fragment>
   );

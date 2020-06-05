@@ -1,26 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test snapshot 1`] = `
-<PageHeader
+<Component
+  headerTools={
+    <React.Fragment>
+      <Unknown>
+        <Unknown
+          visibility={
+            Object {
+              "2xl": "visible",
+              "default": "hidden",
+              "lg": "visible",
+              "md": "hidden",
+              "sm": "hidden",
+              "xl": "visible",
+            }
+          }
+        >
+          <Unknown>
+            <ButtonAboutApp />
+          </Unknown>
+        </Unknown>
+        <Unknown
+          alt="Avatar image"
+          src="avatar.svg"
+        />
+      </Unknown>
+    </React.Fragment>
+  }
   logo={
-    <Brand
+    <Unknown
       alt="brand"
       src="brand.svg"
     />
   }
   showNavToggle={true}
-  toolbar={
-    <React.Fragment>
-      <Toolbar>
-        <ToolbarGroup
-          className="pf-u-screen-reader pf-u-visible"
-        >
-          <ToolbarItem>
-            <ButtonAboutApp />
-          </ToolbarItem>
-        </ToolbarGroup>
-      </Toolbar>
-    </React.Fragment>
-  }
 />
 `;

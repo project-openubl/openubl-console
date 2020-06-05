@@ -2,22 +2,22 @@
 
 exports[`Renders without crashing 1`] = `
 <Fragment>
-  <PageSection>
-    <Bullseye>
-      <EmptyState
+  <Component>
+    <Component>
+      <Component
         variant="full"
       >
-        <EmptyStateIcon
+        <Component
           icon={[Function]}
         />
-        <Title
+        <Component
           headingLevel="h5"
           size="lg"
         >
           Error 403 Not found! The resource you are trying to reach does not exists.
-        </Title>
-      </EmptyState>
-    </Bullseye>
-  </PageSection>
+        </Component>
+      </Component>
+    </Component>
+  </Component>
 </Fragment>
 `;

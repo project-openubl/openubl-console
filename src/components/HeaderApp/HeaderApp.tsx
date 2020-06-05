@@ -2,14 +2,14 @@ import * as React from "react";
 import {
   PageHeader,
   Brand,
-  Toolbar,
-  ToolbarGroup,
-  ToolbarItem,
+  PageHeaderTools,
+  Avatar,
+  PageHeaderToolsGroup,
+  PageHeaderToolsItem,
 } from "@patternfly/react-core";
-import { css } from "@patternfly/react-styles";
-import accessibleStyles from "@patternfly/react-styles/css/utilities/Accessibility/accessibility";
 
 import navBrandImage from "../../brand.svg";
+import imgAvatar from "../../avatar.svg";
 import { ButtonAboutApp } from "../ButtonAboutApp";
 
 export interface HeaderProps {}
@@ -20,18 +20,23 @@ export class HeaderApp extends React.Component<HeaderProps, State> {
   renderPageToolbar = () => {
     return (
       <React.Fragment>
-        <Toolbar>
-          <ToolbarGroup
-            className={css(
-              accessibleStyles.screenReader,
-              accessibleStyles.visible
-            )}
+        <PageHeaderTools>
+          <PageHeaderToolsGroup
+            visibility={{
+              default: "hidden",
+              "2xl": "visible",
+              xl: "visible",
+              lg: "visible",
+              md: "hidden",
+              sm: "hidden",
+            }}
           >
-            <ToolbarItem>
+            <PageHeaderToolsItem>
               <ButtonAboutApp />
-            </ToolbarItem>
-          </ToolbarGroup>
-        </Toolbar>
+            </PageHeaderToolsItem>
+          </PageHeaderToolsGroup>
+          <Avatar src={imgAvatar} alt="Avatar image" />
+        </PageHeaderTools>
       </React.Fragment>
     );
   };
@@ -40,7 +45,7 @@ export class HeaderApp extends React.Component<HeaderProps, State> {
     return (
       <PageHeader
         logo={<Brand src={navBrandImage} alt="brand" />}
-        toolbar={this.renderPageToolbar()}
+        headerTools={this.renderPageToolbar()}
         showNavToggle
       />
     );

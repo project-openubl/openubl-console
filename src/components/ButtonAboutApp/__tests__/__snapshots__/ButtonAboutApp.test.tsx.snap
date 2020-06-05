@@ -12,7 +12,6 @@ exports[`Test snapshot :: open modal 1`] = `
       color="currentColor"
       noVerticalAlign={false}
       size="sm"
-      title={null}
     />
   </Component>
   <AboutModal
@@ -27,16 +26,16 @@ exports[`Test snapshot :: open modal 1`] = `
     productName="My product name"
     trademark="COPYRIGHT © 2020."
   >
-    <TextContent>
-      <TextList
+    <Component>
+      <Component
         component="dl"
       >
-        <TextListItem
+        <Component
           component="dt"
         >
           Source code
-        </TextListItem>
-        <TextListItem
+        </Component>
+        <Component
           component="dd"
         >
           <a
@@ -44,9 +43,9 @@ exports[`Test snapshot :: open modal 1`] = `
           >
             Github
           </a>
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Component>
+      </Component>
+    </Component>
   </AboutModal>
 </Fragment>
 `;
@@ -63,7 +62,6 @@ exports[`Test snapshot 1`] = `
       color="currentColor"
       noVerticalAlign={false}
       size="sm"
-      title={null}
     />
   </Component>
   <AboutModal
@@ -78,16 +76,16 @@ exports[`Test snapshot 1`] = `
     productName="My product name"
     trademark="COPYRIGHT © 2020."
   >
-    <TextContent>
-      <TextList
+    <Component>
+      <Component
         component="dl"
       >
-        <TextListItem
+        <Component
           component="dt"
         >
           Source code
-        </TextListItem>
-        <TextListItem
+        </Component>
+        <Component
           component="dd"
         >
           <a
@@ -95,9 +93,9 @@ exports[`Test snapshot 1`] = `
           >
             Github
           </a>
-        </TextListItem>
-      </TextList>
-    </TextContent>
+        </Component>
+      </Component>
+    </Component>
   </AboutModal>
 </Fragment>
 `;
