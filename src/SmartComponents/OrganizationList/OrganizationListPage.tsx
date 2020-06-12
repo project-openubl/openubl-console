@@ -7,6 +7,13 @@ import {
   ToolbarItem,
   Pagination,
   ToolbarContent,
+  Bullseye,
+  Spinner,
+  EmptyState,
+  EmptyStateIcon,
+  Title,
+  EmptyStateBody,
+  EmptyStateVariant,
 } from "@patternfly/react-core";
 import {
   Table,
@@ -17,6 +24,8 @@ import {
   cellWidth,
   IAction,
 } from "@patternfly/react-table";
+import { SearchIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
+import { global_danger_color_200 as globalDangerColor200 } from "@patternfly/react-tokens";
 import {
   OrganizationRepresentation,
   PaginationResponseRepresentation,
@@ -24,7 +33,6 @@ import {
 import { FetchStatus } from "../../store/common";
 import { deleteDialogActions } from "../../store/deleteDialog";
 import { XmlBuilderRouterProps } from "../../models/routerProps";
-import { TableError } from "../../PresentationalComponents/TableError";
 import { FilterToolbarItem } from "../../PresentationalComponents/FilterToolbarItem";
 
 interface StateToProps {
@@ -66,7 +74,6 @@ export class OrganizationList extends React.Component<Props, State> {
       columns: [
         { title: "Nombre", transforms: [cellWidth(30)] },
         { title: "Descripcion", transforms: [] },
-        { title: "Tipo", transforms: [cellWidth(10)] },
       ],
       actions: [
         {
@@ -97,10 +104,11 @@ export class OrganizationList extends React.Component<Props, State> {
   };
 
   filtersInRowsAndCells = (
-    data: PaginationResponseRepresentation<OrganizationRepresentation> = this
-      .props.organizations
+    organizations: PaginationResponseRepresentation<
+      OrganizationRepresentation
+    > = this.props.organizations
   ) => {
-    const rows: (IRow | string[])[] = data.data.map(
+    let rows: IRow[] = organizations.data.map(
       (item: OrganizationRepresentation) => {
         return {
           cells: [
@@ -117,9 +125,6 @@ export class OrganizationList extends React.Component<Props, State> {
               ) : (
                 <small>No description</small>
               ),
-            },
-            {
-              title: item.type,
             },
           ],
         };
@@ -187,13 +192,7 @@ export class OrganizationList extends React.Component<Props, State> {
   };
 
   handleOnPerPageSelect = (_event: any, pageSize: number) => {
-    let page = this.state.page;
-    const total = this.props.organizations.meta.count;
-
-    // If current page and perPage would request data beyond total, show last available page
-    if (page * pageSize > total) {
-      page = Math.floor(total / pageSize) + 1;
-    }
+    let page = 1;
 
     this.setState({ page, pageSize }, () => {
       this.refreshData(page, pageSize);
@@ -220,20 +219,83 @@ export class OrganizationList extends React.Component<Props, State> {
   };
 
   renderTable = () => {
-    const { error, fetchStatus } = this.props;
+    const { fetchStatus, error } = this.props;
     const { columns, rows, actions } = this.state;
 
+    let showActions = true;
+    let selectedRows = rows;
     if (fetchStatus !== "complete") {
-      // return <TableSkeleton columns={columns} rowSize={pageSize} />;
-      return <p>Skeleton</p>;
+      showActions = false;
+      selectedRows = [
+        {
+          heightAuto: true,
+          cells: [
+            {
+              props: { colSpan: 8 },
+              title: (
+                <Bullseye>
+                  <Spinner size="xl" />
+                </Bullseye>
+              ),
+            },
+          ],
+        },
+      ];
     }
-
     if (error) {
-      return <TableError columns={columns} />;
+      showActions = false;
+      selectedRows = [
+        {
+          heightAuto: true,
+          cells: [
+            {
+              props: { colSpan: 8 },
+              title: (
+                <EmptyState variant={EmptyStateVariant.small}>
+                  <EmptyStateIcon
+                    icon={ExclamationCircleIcon}
+                    color={globalDangerColor200.value}
+                  />
+                  <Title headingLevel="h2" size="lg">
+                    Unable to connect
+                  </Title>
+                  <EmptyStateBody>
+                    There was an error retrieving data. Check your connection
+                    and try again.
+                  </EmptyStateBody>
+                </EmptyState>
+              ),
+            },
+          ],
+        },
+      ];
     }
 
-    if (rows.length === 0) {
-      return <p>Table empty</p>;
+    if (selectedRows.length === 0) {
+      showActions = false;
+      selectedRows = [
+        {
+          heightAuto: true,
+          cells: [
+            {
+              props: { colSpan: 8 },
+              title: (
+                <EmptyState variant={EmptyStateVariant.small}>
+                  <EmptyStateIcon icon={SearchIcon} />
+                  <Title headingLevel="h2" size="lg">
+                    No results found
+                  </Title>
+                  <EmptyStateBody>
+                    No results match the filter criteria. Remove all filters or
+                    clear all filters to show results.
+                  </EmptyStateBody>
+                  <Button variant="link">Clear all filters</Button>
+                </EmptyState>
+              ),
+            },
+          ],
+        },
+      ];
     }
 
     return (
@@ -241,8 +303,8 @@ export class OrganizationList extends React.Component<Props, State> {
         <Table
           aria-label="Organization List Table"
           cells={columns}
-          rows={rows}
-          actions={actions}
+          rows={selectedRows}
+          actions={showActions ? actions : undefined}
         >
           <TableHeader />
           <TableBody />
