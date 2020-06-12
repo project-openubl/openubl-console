@@ -8,7 +8,7 @@ import {
   ButtonVariant,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
-import brandImage from "../../logo.svg";
+import brandImage from "../../logo.png";
 
 export interface ButtonAboutProjectProps {}
 
@@ -52,15 +52,13 @@ export class ButtonAboutApp extends React.Component<
           trademark="COPYRIGHT © 2020."
           brandImageSrc={brandImage}
           brandImageAlt="Logo"
-          productName="My product name"
+          productName="Project OpenUBL Web Console"
         >
           <TextContent>
             <TextList component="dl">
               <TextListItem component="dt">Source code</TextListItem>
               <TextListItem component="dd">
-                <a href="https://github.com/carlosthe19916/cra-patternfly">
-                  Github
-                </a>
+                <a href="https://github.com/project-openubl">Github</a>
               </TextListItem>
             </TextList>
           </TextContent>

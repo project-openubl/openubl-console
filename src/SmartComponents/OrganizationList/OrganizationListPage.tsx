@@ -20,7 +20,7 @@ import {
 import {
   OrganizationRepresentation,
   PaginationResponseRepresentation,
-} from "../../models/openubl";
+} from "../../models/api";
 import { FetchStatus } from "../../store/common";
 import { deleteDialogActions } from "../../store/deleteDialog";
 import { XmlBuilderRouterProps } from "../../models/routerProps";

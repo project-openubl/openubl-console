@@ -3,7 +3,7 @@ import { ActionType, getType } from "typesafe-actions";
 import {
   OrganizationRepresentation,
   PaginationResponseRepresentation,
-} from "../../models/openubl";
+} from "../../models/api";
 import { FetchStatus } from "../common";
 import {
   fetchOrganizationListRequest,

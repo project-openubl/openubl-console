@@ -1,14 +1,14 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
-import { OrganizationRepresentation } from "../../models/openubl";
+import { OrganizationRepresentation } from "../../models/api";
 import {
   getOrganizationById,
   createOrganization,
   updateOrganization,
   getOrganizationIdByName,
   removeOrganization,
-} from "../../api/organizations";
+} from "../../api/api";
 import { fetchOrganizations } from "../organizationContext/actions";
 import { alert, alertFetchEndpoint } from "../alert/actions";
 

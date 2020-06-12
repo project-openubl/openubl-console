@@ -6,18 +6,16 @@ import {
   KeysMetadataRepresentation,
   ComponentRepresentation,
   DocumentType,
-} from "../models/openubl";
+} from "../models/api";
 
-const ORGANIZATIONS_URL = "/organizations";
-const GET_ID_BY_NAME_URL = "/organizations/id-by-name";
-const GET_ORGANIZATION_KEYS_URL = "/organizations/{organizationId}/keys";
-const ORGANIZATION_COMPONENTS_URL =
-  "/organizations/{organizationId}/components";
-const GET_ORGANIZATION_COMPONENT_URL =
-  "/organizations/{organizationId}/components/{componentId}";
-const ORGANIZATION_ENRICH_DOCUMENTS_URL =
+const ORGS = "/organizations";
+const GET_ORG_ID_BY_NAME = "/organizations/id-by-name";
+const ORG_KEYS = "/organizations/{organizationId}/keys";
+const ORG_COMPONENTS = "/organizations/{organizationId}/components";
+const COMPONENT = "/organizations/{organizationId}/components/{componentId}";
+const DOCUMENT_ENRICH =
   "/organizations/{organizationId}/documents/{documentType}/enrich";
-const ORGANIZATION_CREATE_DOCUMENTS_URL =
+const DOCUMENT_CREATE =
   "/organizations/{organizationId}/documents/{documentType}/create";
 
 export const getOrganizations = (
@@ -43,22 +41,23 @@ export const getOrganizations = (
 
   return ApiClient.get<
     PaginationResponseRepresentation<OrganizationRepresentation>
-  >(`${ORGANIZATIONS_URL}?${query.join("&")}`);
+  >(`${ORGS}?${query.join("&")}`);
+};
+
+export const getOrganizationIdByName = (
+  name: string
+): AxiosPromise<string | null> => {
+  return ApiClient.get(GET_ORG_ID_BY_NAME + "/" + encodeURIComponent(name));
 };
 
 export const createOrganization = (
   organization: OrganizationRepresentation
 ) => {
-  return ApiClient.post<OrganizationRepresentation>(
-    ORGANIZATIONS_URL,
-    organization
-  );
+  return ApiClient.post<OrganizationRepresentation>(ORGS, organization);
 };
 
 export const getOrganizationById = (organizationId: string) => {
-  return ApiClient.get<OrganizationRepresentation>(
-    `${ORGANIZATIONS_URL}/${organizationId}`
-  );
+  return ApiClient.get<OrganizationRepresentation>(`${ORGS}/${organizationId}`);
 };
 
 export const updateOrganization = (
@@ -66,26 +65,20 @@ export const updateOrganization = (
   organization: OrganizationRepresentation
 ) => {
   return ApiClient.put<OrganizationRepresentation>(
-    `${ORGANIZATIONS_URL}/${organizationId}`,
+    `${ORGS}/${organizationId}`,
     organization
   );
 };
 
 export const removeOrganization = (organizationId: string) => {
-  return ApiClient.delete(`${ORGANIZATIONS_URL}/${organizationId}`);
-};
-
-export const getOrganizationIdByName = (
-  name: string
-): AxiosPromise<string | null> => {
-  return ApiClient.get(GET_ID_BY_NAME_URL + "/" + encodeURIComponent(name));
+  return ApiClient.delete(`${ORGS}/${organizationId}`);
 };
 
 export const getOrganizationKeys = (
   organizationId: string
 ): AxiosPromise<KeysMetadataRepresentation> => {
   return ApiClient.get<KeysMetadataRepresentation>(
-    GET_ORGANIZATION_KEYS_URL.replace("{organizationId}", organizationId)
+    ORG_KEYS.replace("{organizationId}", organizationId)
   );
 };
 
@@ -93,7 +86,7 @@ export const getOrganizationComponents = (
   organizationId: string
 ): AxiosPromise<ComponentRepresentation[]> => {
   return ApiClient.get<ComponentRepresentation[]>(
-    ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId)
+    ORG_COMPONENTS.replace("{organizationId}", organizationId)
   );
 };
 
@@ -102,10 +95,10 @@ export const getOrganizationComponent = (
   componentId: string
 ): AxiosPromise<ComponentRepresentation> => {
   return ApiClient.get<ComponentRepresentation>(
-    GET_ORGANIZATION_COMPONENT_URL.replace(
-      "{organizationId}",
-      organizationId
-    ).replace("{componentId}", componentId)
+    COMPONENT.replace("{organizationId}", organizationId).replace(
+      "{componentId}",
+      componentId
+    )
   );
 };
 
@@ -114,7 +107,7 @@ export const createOrganizationComponent = (
   component: ComponentRepresentation
 ): AxiosPromise<ComponentRepresentation> => {
   return ApiClient.post<ComponentRepresentation>(
-    ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId),
+    ORG_COMPONENTS.replace("{organizationId}", organizationId),
     component
   );
 };
@@ -124,10 +117,10 @@ export const updateOrganizationComponent = (
   component: ComponentRepresentation
 ): AxiosPromise<ComponentRepresentation> => {
   return ApiClient.put<ComponentRepresentation>(
-    GET_ORGANIZATION_COMPONENT_URL.replace(
-      "{organizationId}",
-      organizationId
-    ).replace("{componentId}", component.id),
+    COMPONENT.replace("{organizationId}", organizationId).replace(
+      "{componentId}",
+      component.id
+    ),
     component
   );
 };
@@ -137,10 +130,10 @@ export const deleteOrganizationComponent = (
   componentId: string
 ): AxiosPromise => {
   return ApiClient.delete(
-    GET_ORGANIZATION_COMPONENT_URL.replace(
-      "{organizationId}",
-      organizationId
-    ).replace("{componentId}", componentId)
+    COMPONENT.replace("{organizationId}", organizationId).replace(
+      "{componentId}",
+      componentId
+    )
   );
 };
 
@@ -150,10 +143,10 @@ export const enrichOrganizationDocument = (
   document: any
 ): AxiosPromise<any> => {
   return ApiClient.post<any>(
-    ORGANIZATION_ENRICH_DOCUMENTS_URL.replace(
-      "{organizationId}",
-      organizationId
-    ).replace("{documentType}", documentType),
+    DOCUMENT_ENRICH.replace("{organizationId}", organizationId).replace(
+      "{documentType}",
+      documentType
+    ),
     document
   );
 };
@@ -164,10 +157,10 @@ export const createOrganizationDocument = (
   document: any
 ): AxiosPromise<any> => {
   return ApiClient.post<any>(
-    ORGANIZATION_CREATE_DOCUMENTS_URL.replace(
-      "{organizationId}",
-      organizationId
-    ).replace("{documentType}", documentType),
+    DOCUMENT_CREATE.replace("{organizationId}", organizationId).replace(
+      "{documentType}",
+      documentType
+    ),
     document
   );
 };

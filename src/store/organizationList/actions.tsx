@@ -4,8 +4,8 @@ import { createAsyncAction } from "typesafe-actions";
 import {
   OrganizationRepresentation,
   PaginationResponseRepresentation,
-} from "../../models/openubl";
-import { getOrganizations } from "../../api/organizations";
+} from "../../models/api";
+import { getOrganizations } from "../../api/api";
 import { alertFetchEndpoint } from "../alert/actions";
 
 export const {

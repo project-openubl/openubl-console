@@ -4,23 +4,23 @@ import { AppRoutes } from "./Routes";
 
 import "./App.scss";
 
-import { DefaultLayout } from "./components/DefaultLayout";
-import { SecuredComponent } from "./components/SecuredComponent";
+import { DefaultLayout } from "./PresentationalComponents/DefaultLayout";
+import { SecuredComponent } from "./PresentationalComponents/SecuredComponent";
 
 const App: React.FC = () => {
+  const renderApp = () => (
+    <DefaultLayout>
+      <AppRoutes />
+    </DefaultLayout>
+  );
+
   return (
     <React.Fragment>
       <HashRouter>
         {process.env.REACT_APP_SECURED ? (
-          <SecuredComponent>
-            <DefaultLayout>
-              <AppRoutes />
-            </DefaultLayout>
-          </SecuredComponent>
+          <SecuredComponent>{renderApp()}</SecuredComponent>
         ) : (
-          <DefaultLayout>
-            <AppRoutes />
-          </DefaultLayout>
+          renderApp()
         )}
       </HashRouter>
     </React.Fragment>

@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { ActionType, getType } from "typesafe-actions";
-import { OrganizationRepresentation } from "../../models/openubl";
+import { OrganizationRepresentation } from "../../models/api";
 import { FetchStatus } from "../common";
 import {
   fetchOrganizationsRequest,

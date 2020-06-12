@@ -4,8 +4,8 @@ import { createAction } from "typesafe-actions";
 import {
   OrganizationRepresentation,
   PaginationResponseRepresentation,
-} from "../../models/openubl";
-import { getOrganizations } from "../../api/organizations";
+} from "../../models/api";
+import { getOrganizations } from "../../api/api";
 
 export const fetchOrganizationsRequest = createAction(
   "organizationContext/organizations/fetch/request"
