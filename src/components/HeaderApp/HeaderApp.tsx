@@ -8,7 +8,7 @@ import {
   PageHeaderToolsItem,
 } from "@patternfly/react-core";
 
-import navBrandImage from "../../brand.svg";
+import navBrandImage from "../../logo-navbar.svg";
 import imgAvatar from "../../avatar.svg";
 import { ButtonAboutApp } from "../ButtonAboutApp";
 
