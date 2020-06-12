@@ -34,6 +34,7 @@ import { FetchStatus } from "../../store/common";
 import { deleteDialogActions } from "../../store/deleteDialog";
 import { XmlBuilderRouterProps } from "../../models/routerProps";
 import { FilterToolbarItem } from "../../PresentationalComponents/FilterToolbarItem";
+import { debouncedFetch } from "../../utils/debounce";
 
 interface StateToProps {
   organizations: PaginationResponseRepresentation<OrganizationRepresentation>;
@@ -167,16 +168,6 @@ export class OrganizationList extends React.Component<Props, State> {
     });
   };
 
-  handleSearchSubmit = (values: any) => {
-    const page = 1;
-    const { pageSize } = this.state;
-    const filterText: string = values.filterText.trim();
-
-    this.setState({ filterText }, () => {
-      this.refreshData(page, pageSize, filterText);
-    });
-  };
-
   onPageChange = (event: any, page: number) => {
     this.setState({ page }, () => {
       this.refreshData(page);
@@ -289,7 +280,9 @@ export class OrganizationList extends React.Component<Props, State> {
                     No results match the filter criteria. Remove all filters or
                     clear all filters to show results.
                   </EmptyStateBody>
-                  <Button variant="link">Clear all filters</Button>
+                  <Button variant="link" onClick={this.onClearFilters}>
+                    Clear all filters
+                  </Button>
                 </EmptyState>
               ),
             },
@@ -320,13 +313,38 @@ export class OrganizationList extends React.Component<Props, State> {
     );
   };
 
+  //
+
+  onFilterChange = (
+    value: string,
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const page = 1;
+    const { pageSize } = this.state;
+    const filterText: string = value.trim();
+
+    this.setState({ filterText });
+    debouncedFetch(() => {
+      this.refreshData(page, pageSize, filterText);
+    });
+  };
+
+  onClearFilters = () => {
+    const filterText = "";
+    this.setState({ filterText }, () => {
+      this.refreshData(undefined, undefined, filterText);
+    });
+  };
+
   render() {
+    const { filterText } = this.state;
     return (
       <React.Fragment>
         <Toolbar id="toolbar">
           <ToolbarContent>
             <FilterToolbarItem
-              onFilterChange={() => console.log("3")}
+              searchValue={filterText}
+              onFilterChange={this.onFilterChange}
               placeholder="Filter by name"
             />
             <ToolbarItem>
