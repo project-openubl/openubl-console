@@ -7,6 +7,9 @@ import "./App.scss";
 import { DefaultLayout } from "./PresentationalComponents/DefaultLayout";
 import { SecuredComponent } from "./PresentationalComponents/SecuredComponent";
 
+import "@redhat-cloud-services/frontend-components-notifications/index.css";
+const frontendComponentsNotifications = require("@redhat-cloud-services/frontend-components-notifications");
+
 const App: React.FC = () => {
   const renderApp = () => (
     <DefaultLayout>
@@ -14,6 +17,8 @@ const App: React.FC = () => {
     </DefaultLayout>
   );
 
+  const NotificationsPortal =
+    frontendComponentsNotifications.NotificationsPortal;
   return (
     <React.Fragment>
       <HashRouter>
@@ -22,6 +27,7 @@ const App: React.FC = () => {
         ) : (
           renderApp()
         )}
+        <NotificationsPortal />
       </HashRouter>
     </React.Fragment>
   );

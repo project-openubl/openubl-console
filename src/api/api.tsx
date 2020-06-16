@@ -9,17 +9,19 @@ import {
 } from "../models/api";
 
 const ORGS = "/organizations";
-const GET_ORG_ID_BY_NAME = "/organizations/id-by-name";
 const ORG_KEYS = "/organizations/{organizationId}/keys";
 const ORG_COMPONENTS = "/organizations/{organizationId}/components";
 const COMPONENT = "/organizations/{organizationId}/components/{componentId}";
+
 const DOCUMENT_ENRICH =
   "/organizations/{organizationId}/documents/{documentType}/enrich";
 const DOCUMENT_CREATE =
   "/organizations/{organizationId}/documents/{documentType}/create";
 
+const TEMPLATES = "/templates";
+
 export const getOrganizations = (
-  filterText?: string,
+  name?: string,
   page: number = 1,
   pageSize?: number
 ): AxiosPromise<
@@ -28,7 +30,7 @@ export const getOrganizations = (
   const params: any = {
     offset: (page - 1) * (pageSize || 0),
     limit: pageSize,
-    filterText,
+    name,
   };
   const query: string[] = [];
 
@@ -44,10 +46,12 @@ export const getOrganizations = (
   >(`${ORGS}?${query.join("&")}`);
 };
 
-export const getOrganizationIdByName = (
+export const getOrganizationByName = (
   name: string
-): AxiosPromise<string | null> => {
-  return ApiClient.get(GET_ORG_ID_BY_NAME + "/" + encodeURIComponent(name));
+): AxiosPromise<
+  PaginationResponseRepresentation<OrganizationRepresentation>
+> => {
+  return ApiClient.get(ORGS + "?name=" + encodeURIComponent(name));
 };
 
 export const createOrganization = (
@@ -163,4 +167,26 @@ export const createOrganizationDocument = (
     ),
     document
   );
+};
+
+export const getWSTemplates = (
+  name?: string
+): AxiosPromise<
+  PaginationResponseRepresentation<OrganizationRepresentation>
+> => {
+  const params: any = {
+    name,
+  };
+  const query: string[] = [];
+
+  Object.keys(params).forEach((key: string) => {
+    const value: any = params[key];
+    if (value !== undefined) {
+      query.push(`${key}=${value}`);
+    }
+  });
+
+  return ApiClient.get<
+    PaginationResponseRepresentation<OrganizationRepresentation>
+  >(`${TEMPLATES}/ws?${query.join("&")}`);
 };

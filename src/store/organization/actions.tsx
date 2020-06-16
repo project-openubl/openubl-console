@@ -6,7 +6,6 @@ import {
   getOrganizationById,
   createOrganization,
   updateOrganization,
-  getOrganizationIdByName,
   removeOrganization,
 } from "../../api/api";
 import { fetchOrganizations } from "../organizationContext/actions";
@@ -98,11 +97,6 @@ export const requestCreateOrganization = (
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         dispatch(createOrganizationSuccess(res.data));
         fetchOrganizations()(dispatch);
-        alert({
-          title: `Creado satisfactoriamente`,
-          description: `Organización ${organization.name} creada`,
-          variant: "success",
-        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(createOrganizationFailure(err));
@@ -160,28 +154,6 @@ export const deleteOrganization = (organizationId: string) => {
       .catch((err: AxiosError) => {
         dispatch(deleteOrganizationFailure(err, meta));
         alertFetchEndpoint(err)(dispatch);
-      });
-  };
-};
-
-//
-
-export const fetchOrganizationIdByName = (organizationName: string) => {
-  return (dispatch: Dispatch) => {
-    const meta: OrganizationNameActionMeta = {
-      organizationName: organizationName,
-    };
-
-    dispatch(fetchOrganizationIdByNameRequest(meta));
-
-    return getOrganizationIdByName(organizationName)
-      .then((res: AxiosResponse<string | null>) => {
-        const data = res.data;
-        dispatch(fetchOrganizationIdByNameSuccess(data, meta));
-        return data;
-      })
-      .catch((err: AxiosError) => {
-        dispatch(fetchOrganizationIdByNameFailure(err, meta));
       });
   };
 };

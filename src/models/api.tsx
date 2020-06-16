@@ -30,6 +30,36 @@ export interface OrganizationRepresentation {
   description: string;
   type: string;
   useMasterKeys: boolean;
+  settings: OrganizationSettingsRepresentation;
+}
+
+export interface OrganizationSettingsRepresentation {
+  ruc: string;
+  razonSocial: string;
+  nombreComercial: string;
+  sunatUsername: string;
+  sunatPassword: string;
+  sunatUrlFactura: string;
+  sunatUrlGuiaRemision: string;
+  sunatUrlPercepcionRetencion: string;
+  address?: AddressRepresentation;
+  contact?: ContactRepresentation;
+}
+
+export interface AddressRepresentation {
+  ubigeo: string;
+  codigoLocal?: string;
+  urbanizacion?: string;
+  provincia?: string;
+  departamento?: string;
+  distrito?: string;
+  direccion?: string;
+  codigoPais?: string;
+}
+
+export interface ContactRepresentation {
+  telefono?: string;
+  email?: string;
 }
 
 export interface KeysMetadataRepresentation {
@@ -82,4 +112,11 @@ export interface ConfigPropertyRepresentation {
   defaultValue: string;
   options: string[];
   secret: boolean;
+}
+
+export interface WSTemplateRepresentation {
+  name: string;
+  sunatUrlFactura: string;
+  sunatUrlGuiaRemision: string;
+  sunatUrlPercepcionRetencion: string;
 }

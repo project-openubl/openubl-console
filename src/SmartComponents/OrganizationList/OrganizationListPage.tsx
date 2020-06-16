@@ -32,7 +32,7 @@ import {
 } from "../../models/api";
 import { FetchStatus } from "../../store/common";
 import { deleteDialogActions } from "../../store/deleteDialog";
-import { XmlBuilderRouterProps } from "../../models/routerProps";
+import { AppRouterProps } from "../../models/routerProps";
 import { FilterToolbarItem } from "../../PresentationalComponents/FilterToolbarItem";
 import { debouncedFetch } from "../../utils/debounce";
 
@@ -44,7 +44,7 @@ interface StateToProps {
 
 interface DispatchToProps {
   fetchOrganizations: (
-    filterText: string,
+    name: string,
     page: number,
     pageSize: number
   ) => Promise<void>;
@@ -53,7 +53,7 @@ interface DispatchToProps {
   closeDeleteDialog: typeof deleteDialogActions.closeModal;
 }
 
-interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
+interface Props extends StateToProps, DispatchToProps, AppRouterProps {}
 
 interface State {
   filterText: string;
@@ -96,11 +96,11 @@ export class OrganizationList extends React.Component<Props, State> {
   refreshData = async (
     page: number = this.state.page,
     pageSize: number = this.state.pageSize,
-    filterText: string = this.state.filterText
+    name: string = this.state.filterText
   ) => {
     const { fetchOrganizations } = this.props;
 
-    await fetchOrganizations(filterText, page, pageSize);
+    await fetchOrganizations(name, page, pageSize);
     this.filtersInRowsAndCells();
   };
 

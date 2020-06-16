@@ -6,7 +6,6 @@ import {
   PaginationResponseRepresentation,
 } from "../../models/api";
 import { getOrganizations } from "../../api/api";
-import { alertFetchEndpoint } from "../alert/actions";
 
 export const {
   request: fetchOrganizationListRequest,
@@ -23,20 +22,19 @@ export const {
 >();
 
 export const fetchOrganizations = (
-  filterText: string,
+  name: string,
   page: number,
   pageSize: number
 ) => {
   return (dispatch: Dispatch) => {
     dispatch(fetchOrganizationListRequest());
 
-    return getOrganizations(filterText, page, pageSize)
+    return getOrganizations(name, page, pageSize)
       .then((res: AxiosResponse) => {
         dispatch(fetchOrganizationListSuccess(res.data));
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationListFailure(err));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
