@@ -48,14 +48,14 @@ export const Address: React.FC<AddressProps> = ({
     if (organization) {
       setValues({
         legalEntityAddress: {
-          ubigeo: organization.settings.address?.ubigeo,
-          departamento: organization.settings.address?.departamento,
-          provincia: organization.settings.address?.provincia,
-          distrito: organization.settings.address?.distrito,
-          urbanizacion: organization.settings.address?.urbanizacion,
-          codigoLocal: organization.settings.address?.codigoLocal,
-          direccion: organization.settings.address?.direccion,
-          codigoPais: organization.settings.address?.codigoPais,
+          ubigeo: organization.settings.domicilioFiscal?.ubigeo,
+          departamento: organization.settings.domicilioFiscal?.departamento,
+          provincia: organization.settings.domicilioFiscal?.provincia,
+          distrito: organization.settings.domicilioFiscal?.distrito,
+          urbanizacion: organization.settings.domicilioFiscal?.urbanizacion,
+          codigoLocal: organization.settings.domicilioFiscal?.codigoLocal,
+          direccion: organization.settings.domicilioFiscal?.direccion,
+          codigoPais: organization.settings.domicilioFiscal?.codigoPais,
         },
       });
     }
@@ -76,8 +76,8 @@ export const Address: React.FC<AddressProps> = ({
         ...organization,
         settings: {
           ...organization.settings,
-          address: {
-            ...organization.settings.address,
+          domicilioFiscal: {
+            ...organization.settings.domicilioFiscal,
             ubigeo: formData.legalEntityAddress?.ubigeo || "",
             departamento: formData.legalEntityAddress?.departamento || "",
             provincia: formData.legalEntityAddress?.provincia || "",

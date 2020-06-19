@@ -99,7 +99,7 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
         sunatUrlGuiaRemision: formData.webServices?.sunatUrlGuiaRemision || "",
         sunatUrlPercepcionRetencion:
           formData.webServices?.sunatUrlPercepcionRetencion || "",
-        address: {
+        domicilioFiscal: {
           ubigeo: formData.legalEntityAddress?.ubigeo || "",
           codigoLocal: formData.legalEntityAddress?.codigoLocal,
           urbanizacion: formData.legalEntityAddress?.urbanizacion,
@@ -109,7 +109,7 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
           direccion: formData.legalEntityAddress?.direccion,
           codigoPais: formData.legalEntityAddress?.codigoPais,
         },
-        contact: {
+        contacto: {
           telefono: formData.legalEntityContact?.telefono,
           email: formData.legalEntityContact?.email,
         },

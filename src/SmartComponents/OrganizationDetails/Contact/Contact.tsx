@@ -51,8 +51,8 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
     if (organization) {
       setValues({
         legalEntityContact: {
-          email: organization.settings.contact?.email,
-          telefono: organization.settings.contact?.telefono,
+          email: organization.settings.contacto?.email,
+          telefono: organization.settings.contacto?.telefono,
         },
       });
     }
@@ -73,8 +73,8 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
         ...organization,
         settings: {
           ...organization.settings,
-          contact: {
-            ...organization.settings.contact,
+          contacto: {
+            ...organization.settings.contacto,
             email: formData.legalEntityContact?.email || "",
             telefono: formData.legalEntityContact?.telefono || "",
           },

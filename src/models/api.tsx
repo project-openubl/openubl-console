@@ -42,8 +42,8 @@ export interface OrganizationSettingsRepresentation {
   sunatUrlFactura: string;
   sunatUrlGuiaRemision: string;
   sunatUrlPercepcionRetencion: string;
-  address?: AddressRepresentation;
-  contact?: ContactRepresentation;
+  domicilioFiscal?: AddressRepresentation;
+  contacto?: ContactRepresentation;
 }
 
 export interface AddressRepresentation {
