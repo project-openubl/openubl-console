@@ -40,7 +40,7 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
 
   useEffect(() => {
     setIsOrganizationInfoFormValid(isUIFormValid && isBDNameValid);
-  }, [isUIFormValid, isBDNameValid]);
+  }, [isUIFormValid, isBDNameValid, setIsOrganizationInfoFormValid]);
 
   const getFormValues = (values: OrganizationFormData) => {
     return {
