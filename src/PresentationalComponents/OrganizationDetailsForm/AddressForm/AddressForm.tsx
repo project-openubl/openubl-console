@@ -12,9 +12,9 @@ import {
 import {
   OrganizationFormData,
   LegalEntityAddressFormData,
-} from "../../../../models/ui";
-import { sizeEmptyAllowed, pattern } from "../../../../utils/validation";
-import { getValidated } from "../../../../utils/forms";
+} from "../../../models/ui";
+import { sizeEmptyAllowed, pattern } from "../../../utils/validation";
+import { getValidated } from "../../../utils/forms";
 
 export interface AddressFormProps {
   formData: OrganizationFormData;

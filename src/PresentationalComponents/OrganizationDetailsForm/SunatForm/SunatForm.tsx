@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { AxiosError } from "axios";
+import React, { useState } from "react";
 import {
   TextContent,
   Text,
@@ -15,25 +14,15 @@ import {
   ButtonVariant,
 } from "@patternfly/react-core";
 import { CloneIcon } from "@patternfly/react-icons";
-import { validURL, validString } from "../../utils/validation";
-import { WSTemplateRepresentation } from "../../models/api";
-import { FetchStatus } from "../../store/common";
-import { OrganizationFormData, WebServicesFormData } from "../../models/ui";
-import { getValidated } from "../../utils/forms";
+import { validURL, validString } from "../../../utils/validation";
+import { WSTemplateRepresentation } from "../../../models/api";
+import { OrganizationFormData, WebServicesFormData } from "../../../models/ui";
+import { getValidated } from "../../../utils/forms";
 
-interface StateToProps {
-  wsTemplates: WSTemplateRepresentation[] | undefined;
-  wsTemplatesError: AxiosError | undefined;
-  wsTemplatesFetchStatus: FetchStatus;
-}
-
-interface DispatchToProps {
-  fetchAllTemplates: () => Promise<void>;
-}
-
-export interface SunatFormProps extends StateToProps, DispatchToProps {
+export interface SunatFormProps {
   formData: OrganizationFormData;
   onHandleChange: (data: OrganizationFormData, isValid: boolean) => void;
+  wsTemplates: WSTemplateRepresentation[] | undefined;
   showActions?: boolean;
   disableActions?: boolean;
   onSave?: () => void;
@@ -44,7 +33,6 @@ export const SunatForm: React.FC<SunatFormProps> = ({
   formData,
   onHandleChange,
   wsTemplates,
-  fetchAllTemplates,
   showActions,
   disableActions,
   onSave,
@@ -89,13 +77,6 @@ export const SunatForm: React.FC<SunatFormProps> = ({
     onHandleChange({ webServices: data }, isFormValid);
     setDirty({ ...dirty, ...values });
   };
-
-  useEffect(() => {
-    if (!wsTemplates) {
-      fetchAllTemplates();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <React.Fragment>

@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { OrganizationReview } from "./OrganizationReview";
-import { createMapStateToProps } from "../../store/common";
+import { createMapStateToProps } from "../../../store/common";
 import {
   organizationActions,
   organizationSelectors,
-} from "../../store/organization";
+} from "../../../store/organization";
 
 const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   organization: organizationSelectors.selectOrganization(

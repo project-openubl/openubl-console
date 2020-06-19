@@ -6,6 +6,10 @@ import {
   organizationActions,
   organizationSelectors,
 } from "../../../store/organization";
+import {
+  wsTemplatesSelectors,
+  wsTemplatesActions,
+} from "../../../store/wstemplates";
 
 const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   organization: organizationSelectors.selectOrganization(
@@ -20,11 +24,15 @@ const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
     state,
     ownProps.organizationId
   ),
+  wsTemplates: wsTemplatesSelectors.wsTemplates(state),
+  wsTemplatesError: wsTemplatesSelectors.error(state),
+  wsTemplatesFetchStatus: wsTemplatesSelectors.status(state),
 }));
 
 const mapDispatchToProps = {
   fetchOrganization: organizationActions.fetchOrganization,
   updateOrganization: organizationActions.requestUpdateOrganization,
+  fetchAllTemplates: wsTemplatesActions.fetchAllWSTemplates,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sunat));

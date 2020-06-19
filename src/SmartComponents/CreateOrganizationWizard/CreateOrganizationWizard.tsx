@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Wizard, WizardStep } from "@patternfly/react-core";
+import { AxiosError } from "axios";
 import { OrganizationFormData } from "../../models/ui";
-import { OrganizationInfoForm } from "../../PresentationalComponents/Components/OrganizationDetailsForm/OrganizationInfoForm";
-import { LegalEntityForm } from "../../PresentationalComponents/Components/OrganizationDetailsForm/LegalEntityForm";
-import { AddressForm } from "../../PresentationalComponents/Components/OrganizationDetailsForm/AddressForm";
-import { ContactForm } from "../../PresentationalComponents/Components/OrganizationDetailsForm/ContactForm";
-import SunatForm from "../SunatForm";
-import { OrganizationReviewForm } from "../OrganizationReviewForm/OrganizationReviewForm";
+import { OrganizationInfoForm } from "../../PresentationalComponents/OrganizationDetailsForm/OrganizationInfoForm";
+import { LegalEntityForm } from "../../PresentationalComponents/OrganizationDetailsForm/LegalEntityForm";
+import { AddressForm } from "../../PresentationalComponents/OrganizationDetailsForm/AddressForm";
+import { ContactForm } from "../../PresentationalComponents/OrganizationDetailsForm/ContactForm";
+import { OrganizationReviewForm } from "../../PresentationalComponents/OrganizationDetailsForm/OrganizationReviewForm/OrganizationReviewForm";
 import { AppRouterProps } from "../../models/routerProps";
-import { OrganizationRepresentation } from "../../models/api";
+import {
+  OrganizationRepresentation,
+  WSTemplateRepresentation,
+} from "../../models/api";
 import { AlertModel } from "../../models/alert";
+import { FetchStatus } from "../../store/common";
+import { SunatForm } from "../../PresentationalComponents/OrganizationDetailsForm/SunatForm";
 
-interface StateToProps {}
+interface StateToProps {
+  wsTemplates: WSTemplateRepresentation[] | undefined;
+  wsTemplatesError: AxiosError | undefined;
+  wsTemplatesFetchStatus: FetchStatus;
+}
 
 interface DispatchToProps {
   createOrganization: (
     organization: OrganizationRepresentation
   ) => Promise<void>;
   addAlert: (alert: AlertModel) => void;
+  fetchAllTemplates: () => Promise<void>;
 }
 
 export interface Props extends StateToProps, DispatchToProps, AppRouterProps {}
@@ -26,6 +36,8 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
   history: { push },
   addAlert,
   createOrganization,
+  wsTemplates,
+  fetchAllTemplates,
 }) => {
   const [formData, setValues] = useState<OrganizationFormData>({});
   const [
@@ -38,6 +50,13 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
   const [isSunatFormValid, setIsSunatFormValid] = useState(false);
   const [stepIdReached, setStepIdReached] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!wsTemplates) {
+      fetchAllTemplates();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (data: OrganizationFormData) => {
     setValues({ ...formData, ...data });
@@ -203,7 +222,11 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
         isAddressFormValid &&
         isContactFormValid,
       component: (
-        <SunatForm formData={formData} onHandleChange={handleSunatChange} />
+        <SunatForm
+          formData={formData}
+          onHandleChange={handleSunatChange}
+          wsTemplates={wsTemplates}
+        />
       ),
       enableNext: isSunatFormValid,
     },

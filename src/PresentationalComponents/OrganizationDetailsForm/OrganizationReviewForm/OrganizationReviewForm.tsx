@@ -1,6 +1,6 @@
 import React from "react";
 import { Stack, StackItem, Grid, GridItem } from "@patternfly/react-core";
-import { OrganizationFormData } from "../../models/ui";
+import { OrganizationFormData } from "../../../models/ui";
 
 export interface OrganizationReviewFormProps {
   formData: OrganizationFormData;

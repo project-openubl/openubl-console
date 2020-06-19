@@ -10,9 +10,9 @@ import {
 import {
   OrganizationFormData,
   LegalEntityContactFormData,
-} from "../../../../models/ui";
-import { validEmailAllowEmpty } from "../../../../utils/validation";
-import { getValidated } from "../../../../utils/forms";
+} from "../../../models/ui";
+import { validEmailAllowEmpty } from "../../../utils/validation";
+import { getValidated } from "../../../utils/forms";
 
 export interface WebServicesFormProps {
   formData: OrganizationFormData;

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { OrganizationRepresentation } from "../../../models/api";
+import {
+  OrganizationRepresentation,
+  WSTemplateRepresentation,
+} from "../../../models/api";
 import { FetchStatus } from "../../../store/common";
 import { AppRouterProps } from "../../../models/routerProps";
 import { ArticleSkeleton } from "../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../../models/ui";
-import SunatForm from "../../SunatForm";
+import { SunatForm } from "../../../PresentationalComponents/OrganizationDetailsForm/SunatForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
   organizationError: AxiosError | undefined;
   organizationFetchStatus: FetchStatus | undefined;
+  wsTemplates: WSTemplateRepresentation[] | undefined;
+  wsTemplatesError: AxiosError | undefined;
+  wsTemplatesFetchStatus: FetchStatus;
 }
 
 interface DispatchToProps {
@@ -20,6 +26,7 @@ interface DispatchToProps {
     organizationId: string,
     organization: OrganizationRepresentation
   ) => Promise<void>;
+  fetchAllTemplates: () => Promise<void>;
 }
 
 interface SunatProps extends StateToProps, DispatchToProps, AppRouterProps {
@@ -33,12 +40,21 @@ export const Sunat: React.FC<SunatProps> = ({
   organizationError,
   fetchOrganization,
   updateOrganization,
+  wsTemplates,
+  fetchAllTemplates,
 }) => {
   const [formData, setValues] = useState<OrganizationFormData>({});
   const [isWebServicesFormValid, setIsWebServicesFormValid] = useState(false);
 
   useEffect(() => {
     fetchOrganization(organizationId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!wsTemplates) {
+      fetchAllTemplates();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -99,6 +115,7 @@ export const Sunat: React.FC<SunatProps> = ({
           <SunatForm
             formData={formData}
             onHandleChange={handleWebServicesChange}
+            wsTemplates={wsTemplates}
             showActions
             disableActions={!isWebServicesFormValid}
             onSave={() => {

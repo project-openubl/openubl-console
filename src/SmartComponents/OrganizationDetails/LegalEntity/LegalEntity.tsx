@@ -6,7 +6,7 @@ import { AppRouterProps } from "../../../models/routerProps";
 import { ArticleSkeleton } from "../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../../models/ui";
-import { LegalEntityForm } from "../../../PresentationalComponents/Components/OrganizationDetailsForm/LegalEntityForm";
+import { LegalEntityForm } from "../../../PresentationalComponents/OrganizationDetailsForm/LegalEntityForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
