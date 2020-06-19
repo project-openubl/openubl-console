@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { OrganizationRepresentation } from "../../models/api";
-import { FetchStatus } from "../../store/common";
-import { AppRouterProps } from "../../models/routerProps";
-import { AlertModel } from "../../models/alert";
-import { ArticleSkeleton } from "../../PresentationalComponents/Skeleton/ArticleSkeleton";
-import { OrganizationInfoForm } from "../OrganizationInfoForm";
+import { OrganizationRepresentation } from "../../../models/api";
+import { FetchStatus } from "../../../store/common";
+import { AppRouterProps } from "../../../models/routerProps";
+import { ArticleSkeleton } from "../../../PresentationalComponents/Skeleton/ArticleSkeleton";
+import { OrganizationInfoForm } from "../../../PresentationalComponents/OrganizationDetailsForm/OrganizationInfoForm";
 import { Grid, GridItem } from "@patternfly/react-core";
-import { OrganizationFormData } from "../../models/ui";
+import { OrganizationFormData } from "../../../models/ui";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
@@ -16,7 +15,6 @@ interface StateToProps {
 }
 
 interface DispatchToProps {
-  addAlert: (alert: AlertModel) => void;
   fetchOrganization: (organizationId: string) => Promise<void>;
   updateOrganization: (
     organizationId: string,
@@ -29,6 +27,7 @@ interface OrganizationInfoProps
     DispatchToProps,
     AppRouterProps {
   organizationId: string;
+  onCancel: () => void;
 }
 
 export const OrganizationInfo: React.FC<OrganizationInfoProps> = ({
@@ -38,6 +37,7 @@ export const OrganizationInfo: React.FC<OrganizationInfoProps> = ({
   organizationError,
   fetchOrganization,
   updateOrganization,
+  onCancel,
 }) => {
   const [formData, setValues] = useState<OrganizationFormData>({});
 
@@ -59,21 +59,18 @@ export const OrganizationInfo: React.FC<OrganizationInfoProps> = ({
     setValues({ ...formData, ...data });
   };
 
-  const handleOrganizationInfoChange = (data: OrganizationFormData) => {
+  const handleFormChange = (data: OrganizationFormData) => {
     handleChange(data);
   };
 
   const onSubmit = async () => {
-    const data = {
+    const data: OrganizationRepresentation = {
       ...organization,
-      name: formData.name,
-      description: formData.description,
-    };
+      name: formData.name || "",
+      description: formData.description || "",
+    } as OrganizationRepresentation;
 
-    await updateOrganization(
-      organizationId,
-      data as OrganizationRepresentation
-    );
+    await updateOrganization(organizationId, data);
   };
 
   return (
@@ -85,13 +82,11 @@ export const OrganizationInfo: React.FC<OrganizationInfoProps> = ({
         <GridItem>
           <OrganizationInfoForm
             formData={formData}
-            onHandleChange={handleOrganizationInfoChange}
+            onHandleChange={handleFormChange}
             setIsOrganizationInfoFormValid={() => {}}
             showActions
-            onSave={() => {
-              onSubmit();
-            }}
-            onCancel={() => {}}
+            onSave={onSubmit}
+            onCancel={onCancel}
           />
         </GridItem>
       </Grid>

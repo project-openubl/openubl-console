@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { OrganizationRepresentation } from "../../models/api";
-import { FetchStatus } from "../../store/common";
-import { AppRouterProps } from "../../models/routerProps";
-import { ArticleSkeleton } from "../../PresentationalComponents/Skeleton/ArticleSkeleton";
+import { OrganizationRepresentation } from "../../../models/api";
+import { FetchStatus } from "../../../store/common";
+import { AppRouterProps } from "../../../models/routerProps";
+import { ArticleSkeleton } from "../../../PresentationalComponents/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
-import { OrganizationFormData } from "../../models/ui";
-import { AddressForm } from "../AddressForm";
+import { OrganizationFormData } from "../../../models/ui";
+import { ContactForm } from "../../../PresentationalComponents/OrganizationDetailsForm/ContactForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
@@ -22,17 +22,22 @@ interface DispatchToProps {
   ) => Promise<void>;
 }
 
-interface AddressProps extends StateToProps, DispatchToProps, AppRouterProps {
+interface WebServicesProps
+  extends StateToProps,
+    DispatchToProps,
+    AppRouterProps {
   organizationId: string;
+  onCancel: () => void;
 }
 
-export const Address: React.FC<AddressProps> = ({
+export const LegalEntity: React.FC<WebServicesProps> = ({
   organizationId,
   organization,
   organizationFetchStatus,
   organizationError,
   fetchOrganization,
   updateOrganization,
+  onCancel,
 }) => {
   const [formData, setValues] = useState<OrganizationFormData>({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -45,15 +50,9 @@ export const Address: React.FC<AddressProps> = ({
   useEffect(() => {
     if (organization) {
       setValues({
-        legalEntityAddress: {
-          ubigeo: organization.settings.address?.ubigeo,
-          departamento: organization.settings.address?.departamento,
-          provincia: organization.settings.address?.provincia,
-          distrito: organization.settings.address?.distrito,
-          urbanizacion: organization.settings.address?.urbanizacion,
-          codigoLocal: organization.settings.address?.codigoLocal,
-          direccion: organization.settings.address?.direccion,
-          codigoPais: organization.settings.address?.codigoPais,
+        legalEntityContact: {
+          email: organization.settings.contact?.email,
+          telefono: organization.settings.contact?.telefono,
         },
       });
     }
@@ -74,16 +73,10 @@ export const Address: React.FC<AddressProps> = ({
         ...organization,
         settings: {
           ...organization.settings,
-          address: {
-            ...organization.settings.address,
-            ubigeo: formData.legalEntityAddress?.ubigeo || "",
-            departamento: formData.legalEntityAddress?.departamento || "",
-            provincia: formData.legalEntityAddress?.provincia || "",
-            distrito: formData.legalEntityAddress?.distrito || "",
-            urbanizacion: formData.legalEntityAddress?.urbanizacion || "",
-            codigoLocal: formData.legalEntityAddress?.codigoLocal || "",
-            direccion: formData.legalEntityAddress?.direccion || "",
-            codigoPais: formData.legalEntityAddress?.codigoPais || "",
+          contact: {
+            ...organization.settings.contact,
+            email: formData.legalEntityContact?.email || "",
+            telefono: formData.legalEntityContact?.telefono || "",
           },
         },
       };
@@ -99,15 +92,13 @@ export const Address: React.FC<AddressProps> = ({
       )}
       <Grid lg={6}>
         <GridItem>
-          <AddressForm
+          <ContactForm
             formData={formData}
             onHandleChange={handleFormChange}
             showActions
             disableActions={!isFormValid}
-            onSave={() => {
-              onSubmit();
-            }}
-            onCancel={() => {}}
+            onSave={onSubmit}
+            onCancel={onCancel}
           />
         </GridItem>
       </Grid>

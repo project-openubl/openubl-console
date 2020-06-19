@@ -1,26 +1,41 @@
 import React, { useState } from "react";
-import { Form, FormGroup, TextInput } from "@patternfly/react-core";
+import {
+  Form,
+  FormGroup,
+  TextInput,
+  ActionGroup,
+  Button,
+  ButtonVariant,
+} from "@patternfly/react-core";
 import {
   OrganizationFormData,
   LegalEntityContactFormData,
-} from "../../models/ui";
-import { validEmail } from "../../utils/validation";
-import { getValidated } from "../../utils/forms";
+} from "../../../models/ui";
+import { validEmail } from "../../../utils/validation";
+import { getValidated } from "../../../utils/forms";
 
 export interface WebServicesFormProps {
   formData: OrganizationFormData;
   onHandleChange: (data: OrganizationFormData, isValid: boolean) => void;
+  showActions?: boolean;
+  disableActions?: boolean;
+  onSave?: () => void;
+  onCancel?: () => void;
 }
 
 export const ContactForm: React.FC<WebServicesFormProps> = ({
   formData,
   onHandleChange,
+  showActions,
+  disableActions,
+  onSave,
+  onCancel,
 }) => {
   const [dirty, setDirty] = useState<LegalEntityContactFormData>({});
 
-  const contact: LegalEntityContactFormData = formData.legalEntityContact || {
-    email: "",
-    telefono: "",
+  const contact: LegalEntityContactFormData = {
+    email: formData.legalEntityContact?.email || "",
+    telefono: formData.legalEntityContact?.telefono || "",
   };
   const { email, telefono } = contact;
 
@@ -34,7 +49,7 @@ export const ContactForm: React.FC<WebServicesFormProps> = ({
 
   const handleChange = (values: LegalEntityContactFormData) => {
     const data = getFormValues(values);
-    const isFormValid = data.email === "" || validEmail(data.email);
+    const isFormValid = validEmail(data.email);
     onHandleChange({ legalEntityContact: data }, isFormValid);
     setDirty({ ...dirty, ...values });
   };
@@ -59,7 +74,7 @@ export const ContactForm: React.FC<WebServicesFormProps> = ({
         label="Email"
         isRequired={false}
         fieldId="email"
-        validated={getValidated(email === "" || validEmail(email), dirty.email)}
+        validated={getValidated(validEmail(email), dirty.email)}
         helperTextInvalid="Ingrese un valor válido"
       >
         <TextInput
@@ -75,6 +90,20 @@ export const ContactForm: React.FC<WebServicesFormProps> = ({
           }
         />
       </FormGroup>
+      {showActions && (
+        <ActionGroup>
+          <Button
+            variant={ButtonVariant.primary}
+            onClick={onSave}
+            isDisabled={disableActions}
+          >
+            Guardar
+          </Button>
+          <Button variant={ButtonVariant.link} onClick={onCancel}>
+            Cancelar
+          </Button>
+        </ActionGroup>
+      )}
     </Form>
   );
 };

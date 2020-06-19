@@ -12,9 +12,9 @@ import {
 import {
   OrganizationFormData,
   LegalEntityAddressFormData,
-} from "../../models/ui";
-import { validUbigeo } from "../../utils/validation";
-import { getValidated } from "../../utils/forms";
+} from "../../../models/ui";
+import { size, pattern } from "../../../utils/validation";
+import { getValidated } from "../../../utils/forms";
 
 export interface AddressFormProps {
   formData: OrganizationFormData;
@@ -72,8 +72,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
 
   const handleChange = (values: LegalEntityAddressFormData) => {
     const data = getFormValues(values);
-    // const isFormValid = validUbigeo(data.ubigeo);
-    const isFormValid = true;
+    const isFormValid =
+      size(data.ubigeo, 6, 6) && pattern(data.ubigeo, new RegExp("^[0-9]+$"));
     onHandleChange({ legalEntityAddress: data }, isFormValid);
     setDirty({ ...dirty, ...values });
   };
@@ -86,7 +86,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             label="Código ubigeo"
             isRequired={false}
             fieldId="ubigeo"
-            validated={getValidated(validUbigeo(ubigeo), dirty.ubigeo)}
+            validated={getValidated(
+              size(ubigeo, 6, 6) && pattern(ubigeo, new RegExp("^[0-9]+$")),
+              dirty.ubigeo
+            )}
             helperTextInvalid="Ubigeo inválido"
           >
             <TextInput

@@ -8,11 +8,11 @@ import {
   Button,
   ButtonVariant,
 } from "@patternfly/react-core";
-import { getOrganizationByName } from "../../api/api";
-import { debouncePromise } from "../../utils/debounce";
-import { OrganizationFormData } from "../../models/ui";
-import { getValidated } from "../../utils/forms";
-import { notEmpty, pattern, size } from "../../utils/validation";
+import { getOrganizationByName } from "../../../api/api";
+import { debouncePromise } from "../../../utils/debounce";
+import { OrganizationFormData } from "../../../models/ui";
+import { getValidated } from "../../../utils/forms";
+import { notEmpty, pattern, size } from "../../../utils/validation";
 
 export interface OrganizationInfoFormProps {
   formData: OrganizationFormData;

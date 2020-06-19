@@ -7,9 +7,9 @@ import {
   Button,
   ButtonVariant,
 } from "@patternfly/react-core";
-import { OrganizationFormData, LegalEntityFormData } from "../../models/ui";
-import { validRUC, validString } from "../../utils/validation";
-import { getValidated } from "../../utils/forms";
+import { OrganizationFormData, LegalEntityFormData } from "../../../models/ui";
+import { notEmpty, size, pattern } from "../../../utils/validation";
+import { getValidated } from "../../../utils/forms";
 
 export interface LegalEntityFormProps {
   formData: OrganizationFormData;
@@ -48,7 +48,14 @@ export const LegalEntityForm: React.FC<LegalEntityFormProps> = ({
 
   const handleChange = (values: LegalEntityFormData) => {
     const data = getFormValues(values);
-    const isFormValid = validRUC(data.ruc) && validString(data.razonSocial);
+
+    const isRucValid =
+      notEmpty(data.ruc) &&
+      size(data.ruc, 11, 11) &&
+      pattern(data.ruc, new RegExp("^[0-9]+$"));
+    const isRazonSocialValid = notEmpty(data.razonSocial);
+
+    const isFormValid = isRucValid && isRazonSocialValid;
     onHandleChange({ legalEntityInfo: data }, isFormValid);
     setDirty({ ...dirty, ...values });
   };
@@ -59,8 +66,13 @@ export const LegalEntityForm: React.FC<LegalEntityFormProps> = ({
         label="RUC"
         isRequired
         fieldId="ruc"
-        validated={getValidated(validRUC(ruc), dirty.ruc)}
-        helperTextInvalid="Ingrese un RUC válido"
+        validated={getValidated(
+          notEmpty(ruc) &&
+            size(ruc, 11, 11) &&
+            pattern(ruc, new RegExp("^[0-9]+$")),
+          dirty.ruc
+        )}
+        helperTextInvalid="Ingrese un valor válido"
       >
         <TextInput
           isRequired
@@ -80,8 +92,8 @@ export const LegalEntityForm: React.FC<LegalEntityFormProps> = ({
         label="Razón social"
         isRequired
         fieldId="razonSocial"
-        validated={getValidated(validString(razonSocial), dirty.razonSocial)}
-        helperTextInvalid="Ingrese una Razón social válida"
+        validated={getValidated(notEmpty(razonSocial), dirty.razonSocial)}
+        helperTextInvalid="Ingrese un valor válido"
       >
         <TextInput
           isRequired

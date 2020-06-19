@@ -14,19 +14,20 @@ import {
 } from "@patternfly/react-core";
 import { AppRouterProps } from "../../../models/routerProps";
 import OrganizationPageSection from "../../../SmartComponents/OrganizationPageSection";
-import OrganizationInfo from "../../../SmartComponents/OrganizationInfo";
+import OrganizationInfo from "../../../SmartComponents/OrganizationDetails/OrganizationInfo";
 import OrganizationReview from "../../../SmartComponents/OrganizationReview";
 import WebServices from "../../../SmartComponents/WebServices";
-import LegalEntity from "../../../SmartComponents/LegalEntity";
-import Address from "../../../SmartComponents/Address";
+import LegalEntity from "../../../SmartComponents/OrganizationDetails/LegalEntity";
+import Address from "../../../SmartComponents/OrganizationDetails/Address";
+import Contact from "../../../SmartComponents/OrganizationDetails/Contact";
 
 export interface PageOrganizationDetailsProps extends AppRouterProps {}
 
 interface TabInfo {
   path: string;
   title: string;
-  render?: () => JSX.Element;
   children?: TabInfo[];
+  render?: () => JSX.Element;
 }
 
 export const PageOrganizationDetails: React.FC<PageOrganizationDetailsProps> = ({
@@ -44,7 +45,14 @@ export const PageOrganizationDetails: React.FC<PageOrganizationDetailsProps> = (
     {
       path: "general-info",
       title: "Información general",
-      render: () => <OrganizationInfo organizationId={organizationId} />,
+      render: () => (
+        <OrganizationInfo
+          organizationId={organizationId}
+          onCancel={() => {
+            push(getRedirectUrl("overview"));
+          }}
+        />
+      ),
     },
     {
       path: "tu-empresa",
@@ -53,17 +61,38 @@ export const PageOrganizationDetails: React.FC<PageOrganizationDetailsProps> = (
         {
           path: "legal-entity",
           title: "Persona jurídica",
-          render: () => <LegalEntity organizationId={organizationId} />,
+          render: () => (
+            <LegalEntity
+              organizationId={organizationId}
+              onCancel={() => {
+                push(getRedirectUrl("overview"));
+              }}
+            />
+          ),
         },
         {
           path: "address",
           title: "Dirección",
-          render: () => <Address organizationId={organizationId} />,
+          render: () => (
+            <Address
+              organizationId={organizationId}
+              onCancel={() => {
+                push(getRedirectUrl("overview"));
+              }}
+            />
+          ),
         },
         {
           path: "contact",
           title: "Contacto",
-          render: () => <LegalEntity organizationId={organizationId} />,
+          render: () => (
+            <Contact
+              organizationId={organizationId}
+              onCancel={() => {
+                push(getRedirectUrl("overview"));
+              }}
+            />
+          ),
         },
       ],
     },
@@ -95,7 +124,11 @@ export const PageOrganizationDetails: React.FC<PageOrganizationDetailsProps> = (
   }, [match, pathname, appTabs]);
 
   const handleTabSelect = (_: any, eventKey: number | string) => {
-    push(`${match.url}/${eventKey}`);
+    push(getRedirectUrl(eventKey));
+  };
+
+  const getRedirectUrl = (path: number | string) => {
+    return `${match.url}/${path}`;
   };
 
   return (

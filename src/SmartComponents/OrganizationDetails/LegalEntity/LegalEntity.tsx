@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { OrganizationRepresentation } from "../../models/api";
-import { FetchStatus } from "../../store/common";
-import { AppRouterProps } from "../../models/routerProps";
-import { ArticleSkeleton } from "../../PresentationalComponents/Skeleton/ArticleSkeleton";
+import { OrganizationRepresentation } from "../../../models/api";
+import { FetchStatus } from "../../../store/common";
+import { AppRouterProps } from "../../../models/routerProps";
+import { ArticleSkeleton } from "../../../PresentationalComponents/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
-import { OrganizationFormData } from "../../models/ui";
-import { LegalEntityForm } from "../LegalEntityForm";
+import { OrganizationFormData } from "../../../models/ui";
+import { LegalEntityForm } from "../../../PresentationalComponents/OrganizationDetailsForm/LegalEntityForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
@@ -27,6 +27,7 @@ interface WebServicesProps
     DispatchToProps,
     AppRouterProps {
   organizationId: string;
+  onCancel: () => void;
 }
 
 export const LegalEntity: React.FC<WebServicesProps> = ({
@@ -36,9 +37,10 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
   organizationError,
   fetchOrganization,
   updateOrganization,
+  onCancel,
 }) => {
   const [formData, setValues] = useState<OrganizationFormData>({});
-  const [isLegalEntityFormValid, setIsLegalEntityFormValid] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     fetchOrganization(organizationId);
@@ -61,12 +63,9 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
     setValues({ ...formData, ...data });
   };
 
-  const handleLegalEntityChange = (
-    data: OrganizationFormData,
-    isValid: boolean
-  ) => {
+  const handleFormChange = (data: OrganizationFormData, isValid: boolean) => {
     handleChange(data);
-    setIsLegalEntityFormValid(isValid);
+    setIsFormValid(isValid);
   };
 
   const onSubmit = async () => {
@@ -94,13 +93,11 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
         <GridItem>
           <LegalEntityForm
             formData={formData}
-            onHandleChange={handleLegalEntityChange}
+            onHandleChange={handleFormChange}
             showActions
-            disableActions={!isLegalEntityFormValid}
-            onSave={() => {
-              onSubmit();
-            }}
-            onCancel={() => {}}
+            disableActions={!isFormValid}
+            onSave={onSubmit}
+            onCancel={onCancel}
           />
         </GridItem>
       </Grid>

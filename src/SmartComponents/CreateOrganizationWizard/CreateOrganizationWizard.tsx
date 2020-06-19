@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Wizard, WizardStep } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../models/ui";
-import { OrganizationInfoForm } from "../OrganizationInfoForm";
-import { LegalEntityForm } from "../LegalEntityForm";
-import { AddressForm } from "../AddressForm";
-import { ContactForm } from "../ContactForm";
+import { OrganizationInfoForm } from "../../PresentationalComponents/OrganizationDetailsForm/OrganizationInfoForm";
+import { LegalEntityForm } from "../../PresentationalComponents/OrganizationDetailsForm/LegalEntityForm";
+import { AddressForm } from "../../PresentationalComponents/OrganizationDetailsForm/AddressForm";
+import { ContactForm } from "../../PresentationalComponents/OrganizationDetailsForm/ContactForm";
 import SunatForm from "../SunatForm";
 import { OrganizationReviewForm } from "../OrganizationReviewForm/OrganizationReviewForm";
 import { AppRouterProps } from "../../models/routerProps";

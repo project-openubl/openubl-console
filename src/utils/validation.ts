@@ -15,33 +15,6 @@ export const validURL = (str: string | undefined) => {
   return !!pattern.test(str);
 };
 
-export const validRUC = (str: string | undefined): boolean => {
-  if (!str) {
-    return false;
-  }
-
-  const pattern = /^\d+$/;
-  return str.trim().length === 11 && pattern.test(str.trim());
-};
-
-export const validUbigeo = (str: string | undefined): boolean => {
-  if (!str) {
-    return false;
-  }
-
-  const pattern = /^\d+$/;
-  return str.trim().length === 6 && pattern.test(str.trim());
-};
-
-export const validEmail = (str: string | undefined): boolean => {
-  if (!str) {
-    return false;
-  }
-
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(str).toLowerCase());
-};
-
 export const validString = (str: string | undefined): boolean => {
   if (!str) {
     return false;
@@ -109,4 +82,18 @@ export const pattern = (val: undefined | null | string, regExp: RegExp) => {
     return true;
   }
   return regExp.test(val);
+};
+
+/**
+ * The string has to be a well-formed email address. Exact semantics of what makes up a valid
+ * {null} elements are considered valid.
+ * @param val value to be evaluated
+ */
+export const validEmail = (val: string | undefined): boolean => {
+  if (val === undefined || val === null || val === "") {
+    return true;
+  }
+
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(val).toLowerCase());
 };

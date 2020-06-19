@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { LegalEntity } from "./LegalEntity";
-import { createMapStateToProps } from "../../store/common";
+import { OrganizationInfo } from "./OrganizationInfo";
+import { createMapStateToProps } from "../../../store/common";
 import {
   organizationActions,
   organizationSelectors,
-} from "../../store/organization";
+} from "../../../store/organization";
 
 const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   organization: organizationSelectors.selectOrganization(
@@ -28,5 +28,5 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(LegalEntity)
+  connect(mapStateToProps, mapDispatchToProps)(OrganizationInfo)
 );
