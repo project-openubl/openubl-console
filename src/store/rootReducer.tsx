@@ -12,6 +12,15 @@ import {
   organizationContextStateKey,
 } from "./organizationContext";
 import { wsTeamplatesReducer, wsTemplatesStateKey } from "./wstemplates";
+import {
+  organizationKeysStateKey,
+  organizationKeysReducer,
+} from "./organizationKeys";
+import {
+  organizationComponentsStateKey,
+  organizationComponentsReducer,
+} from "./organizationComponents";
+import { componentStateKey, componentReducer } from "./organizationComponent";
 
 const frontendComponentsNotifications = require("@redhat-cloud-services/frontend-components-notifications");
 
@@ -25,4 +34,7 @@ export const rootReducer = combineReducers({
   [organizationContextStateKey]: organizationContextReducer,
   [organizationContextStateKey]: organizationContextReducer,
   [wsTemplatesStateKey]: wsTeamplatesReducer,
+  [organizationKeysStateKey]: organizationKeysReducer,
+  [organizationComponentsStateKey]: organizationComponentsReducer,
+  [componentStateKey]: componentReducer,
 });
