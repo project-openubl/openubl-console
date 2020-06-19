@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  TextContent,
-  Text,
-  Form,
-  FormGroup,
-  TextInput,
-  Stack,
-  StackItem,
-} from "@patternfly/react-core";
+import { Form, FormGroup, TextInput } from "@patternfly/react-core";
 import {
   OrganizationFormData,
   LegalEntityContactFormData,
@@ -48,55 +40,41 @@ export const ContactForm: React.FC<WebServicesFormProps> = ({
   };
 
   return (
-    <React.Fragment>
-      <Stack hasGutter={true}>
-        <StackItem>
-          <TextContent>
-            <Text component="h1">Contacto</Text>
-          </TextContent>
-        </StackItem>
-        <StackItem>
-          <Form>
-            <FormGroup label="Teléfono" isRequired={false} fieldId="telefono">
-              <TextInput
-                type="text"
-                id="telefono"
-                name="telefono"
-                aria-describedby="telefono"
-                value={telefono}
-                onChange={(_, event) =>
-                  handleChange({
-                    telefono: event.currentTarget.value,
-                  })
-                }
-              />
-            </FormGroup>
-            <FormGroup
-              label="Email"
-              isRequired={false}
-              fieldId="email"
-              validated={getValidated(
-                email === "" || validEmail(email),
-                dirty.email
-              )}
-              helperTextInvalid="Ingrese un valor válido"
-            >
-              <TextInput
-                type="text"
-                id="email"
-                name="email"
-                aria-describedby="email"
-                value={email}
-                onChange={(_, event) =>
-                  handleChange({
-                    email: event.currentTarget.value,
-                  })
-                }
-              />
-            </FormGroup>
-          </Form>
-        </StackItem>
-      </Stack>
-    </React.Fragment>
+    <Form>
+      <FormGroup label="Teléfono" isRequired={false} fieldId="telefono">
+        <TextInput
+          type="text"
+          id="telefono"
+          name="telefono"
+          aria-describedby="telefono"
+          value={telefono}
+          onChange={(_, event) =>
+            handleChange({
+              telefono: event.currentTarget.value,
+            })
+          }
+        />
+      </FormGroup>
+      <FormGroup
+        label="Email"
+        isRequired={false}
+        fieldId="email"
+        validated={getValidated(email === "" || validEmail(email), dirty.email)}
+        helperTextInvalid="Ingrese un valor válido"
+      >
+        <TextInput
+          type="text"
+          id="email"
+          name="email"
+          aria-describedby="email"
+          value={email}
+          onChange={(_, event) =>
+            handleChange({
+              email: event.currentTarget.value,
+            })
+          }
+        />
+      </FormGroup>
+    </Form>
   );
 };

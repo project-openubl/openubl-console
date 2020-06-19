@@ -96,7 +96,11 @@ export const requestCreateOrganization = (
     return createOrganization(organization)
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         dispatch(createOrganizationSuccess(res.data));
-        fetchOrganizations()(dispatch);
+        alert({
+          title: `Creado satisfactoriamente`,
+          description: `Organización ${organization.name} creado`,
+          variant: "success",
+        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(createOrganizationFailure(err));
@@ -119,7 +123,6 @@ export const requestUpdateOrganization = (
     return updateOrganization(organizationId, organization)
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         dispatch(updateOrganizationSuccess(res.data, meta));
-        fetchOrganizations()(dispatch);
         alert({
           title: `Actualizado satisfactoriamente`,
           description: `Organización ${organization.name} actualizada`,

@@ -1,25 +1,17 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import { PageNotFound404 } from "./PresentationalComponents/PageNotFound404";
-import { PageOrganizationList } from "./PresentationalComponents/PageOrganizationList";
+import { PageOrganizations } from "./PresentationalComponents/PageOrganizations";
 import { PageCreateOrganization } from "./PresentationalComponents/PageCreateOrganization";
 
 export const AppRoutes = () => {
   return (
     <Switch>
-      <Route path="/" component={PageOrganizationList} exact />
-      <Route
-        path="/organizations/list"
-        component={PageOrganizationList}
-        exact
-      />
-      <Route
-        path="/organizations/create"
-        component={PageCreateOrganization}
-        exact
-      />
+      <Route path="/organizations" component={PageOrganizations} />
+      <Route path="/create-organization" component={PageCreateOrganization} />
       <Route path="/error-404" component={PageNotFound404} />
+      <Redirect from="/" to="/organizations" exact />
     </Switch>
   );
 };

@@ -14,7 +14,7 @@ export const OrganizationReviewForm: React.FC<OrganizationReviewFormProps> = ({
       <Stack hasGutter={true}>
         <StackItem className="pf-c-content">
           <section>
-            <h1>Organización</h1>
+            <h2>Organización</h2>
             <dl>
               <dt>Nombre</dt>
               <dd>{formData.name}</dd>
@@ -31,7 +31,7 @@ export const OrganizationReviewForm: React.FC<OrganizationReviewFormProps> = ({
           <Grid hasGutter lg={6}>
             <GridItem>
               <section>
-                <h1>Persona jurídica</h1>
+                <h2>Persona jurídica</h2>
                 <dl>
                   <dt>RUC</dt>
                   <dd>{formData.legalEntityInfo?.ruc}</dd>
@@ -50,7 +50,7 @@ export const OrganizationReviewForm: React.FC<OrganizationReviewFormProps> = ({
               formData.legalEntityContact?.email) && (
               <GridItem>
                 <section>
-                  <h1>Contacto</h1>
+                  <h2>Contacto</h2>
                   <dl>
                     {formData.legalEntityContact?.telefono && (
                       <React.Fragment>
@@ -72,7 +72,7 @@ export const OrganizationReviewForm: React.FC<OrganizationReviewFormProps> = ({
         </StackItem>
         <StackItem className="pf-c-content">
           <section>
-            <h1>Dirección</h1>
+            <h2>Dirección</h2>
             <Grid hasGutter lg={6}>
               <GridItem>
                 <dl>
@@ -131,7 +131,7 @@ export const OrganizationReviewForm: React.FC<OrganizationReviewFormProps> = ({
         </StackItem>
         <StackItem className="pf-c-content">
           <section>
-            <h1>Servicios web</h1>
+            <h2>Servicios web</h2>
             <dl>
               <dt>Usuario</dt>
               <dd>{formData.webServices?.sunatUsername}</dd>

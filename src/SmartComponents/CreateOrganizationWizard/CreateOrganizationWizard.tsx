@@ -120,12 +120,6 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
     };
 
     await createOrganization(organizationData);
-    addAlert({
-      variant: "success",
-      title: `Organización ${organizationData.name} creada`,
-      dismissDelay: 8000,
-      dismissable: false,
-    });
   };
 
   const onCancel = () => {
@@ -202,7 +196,7 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
     },
     {
       id: 5,
-      name: "Servicios web",
+      name: "SUNAT",
       canJumpTo:
         stepIdReached >= 5 &&
         isOrganizationInfoFormValid &&
@@ -230,10 +224,10 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
       onClose={() => {
         onCancel();
       }}
-      onSave={() => {
+      onSave={async () => {
         setIsSubmitting(true);
         if (!isSubmitting) {
-          onSubmit();
+          await onSubmit();
           setIsSubmitting(false);
           push("/");
         }

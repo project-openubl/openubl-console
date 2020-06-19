@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import {
-  TextContent,
-  Text,
   Form,
   FormGroup,
   TextInput,
   TextArea,
-  Stack,
-  StackItem,
+  ActionGroup,
+  Button,
+  ButtonVariant,
 } from "@patternfly/react-core";
 import { getOrganizationByName } from "../../api/api";
 import { debouncePromise } from "../../utils/debounce";
@@ -17,6 +16,9 @@ export interface OrganizationInfoFormProps {
   formData: OrganizationFormData;
   onHandleChange: (data: OrganizationFormData) => void;
   setIsOrganizationInfoFormValid: (result: boolean) => void;
+  showActions?: boolean;
+  onSave?: () => void;
+  onCancel?: () => void;
 }
 
 type ValidationState = "success" | "error" | "default";
@@ -25,6 +27,9 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
   formData,
   onHandleChange,
   setIsOrganizationInfoFormValid,
+  showActions,
+  onSave,
+  onCancel,
 }) => {
   const [error, setError] = useState<ValidationState>("default");
   const [errorNameInvalidText, setErrorNameInvalidText] = useState<string>();
@@ -61,55 +66,55 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
   };
 
   return (
-    <React.Fragment>
-      <Stack hasGutter={true}>
-        <StackItem>
-          <TextContent>
-            <Text component="h1">Datos generales</Text>
-          </TextContent>
-        </StackItem>
-        <StackItem>
-          <Form isHorizontal>
-            <FormGroup
-              label="Nombre"
-              isRequired
-              fieldId="name"
-              helperText={
-                error === "success"
-                  ? "Nombre disponible"
-                  : "Escriba el nombre o nickname de la organización"
-              }
-              validated={error}
-              helperTextInvalid={errorNameInvalidText}
-            >
-              <TextInput
-                isRequired
-                type="text"
-                id="name"
-                name="name"
-                aria-describedby="name"
-                value={name}
-                onBlur={handleNameChange}
-                onChange={(_, event) => {
-                  setError("default");
-                  onHandleChange({ name: event.currentTarget.value });
-                }}
-              />
-            </FormGroup>
-            <FormGroup label="Descripción" fieldId="description">
-              <TextArea
-                type="text"
-                id="description"
-                name="description"
-                value={description}
-                onChange={(_, event) =>
-                  onHandleChange({ description: event.currentTarget.value })
-                }
-              />
-            </FormGroup>
-          </Form>
-        </StackItem>
-      </Stack>
-    </React.Fragment>
+    <Form>
+      <FormGroup
+        label="Nombre"
+        isRequired
+        fieldId="name"
+        helperText={
+          error === "success"
+            ? "Nombre disponible"
+            : "Escriba el nombre o nickname de la organización"
+        }
+        validated={error}
+        helperTextInvalid={errorNameInvalidText}
+      >
+        <TextInput
+          isRequired
+          type="text"
+          id="name"
+          name="name"
+          aria-describedby="name"
+          value={name}
+          onBlur={handleNameChange}
+          onChange={(_, event) => {
+            setError("default");
+            onHandleChange({ name: event.currentTarget.value });
+          }}
+          isDisabled={showActions}
+        />
+      </FormGroup>
+      <FormGroup label="Descripción" fieldId="description">
+        <TextArea
+          type="text"
+          id="description"
+          name="description"
+          value={description}
+          onChange={(_, event) =>
+            onHandleChange({ description: event.currentTarget.value })
+          }
+        />
+      </FormGroup>
+      {showActions && (
+        <ActionGroup>
+          <Button variant={ButtonVariant.primary} onClick={onSave}>
+            Guardar
+          </Button>
+          <Button variant={ButtonVariant.link} onClick={onCancel}>
+            Cancelar
+          </Button>
+        </ActionGroup>
+      )}
+    </Form>
   );
 };

@@ -11,6 +11,8 @@ import {
   Button,
   Flex,
   FlexItem,
+  ActionGroup,
+  ButtonVariant,
 } from "@patternfly/react-core";
 import { CloneIcon } from "@patternfly/react-icons";
 import { validURL, validString } from "../../utils/validation";
@@ -32,6 +34,10 @@ interface DispatchToProps {
 export interface WebServicesFormProps extends StateToProps, DispatchToProps {
   formData: OrganizationFormData;
   onHandleChange: (data: OrganizationFormData, isValid: boolean) => void;
+  showActions?: boolean;
+  disableActions?: boolean;
+  onSave?: () => void;
+  onCancel?: () => void;
 }
 
 export const WebServicesForm: React.FC<WebServicesFormProps> = ({
@@ -39,6 +45,10 @@ export const WebServicesForm: React.FC<WebServicesFormProps> = ({
   onHandleChange,
   wsTemplates,
   fetchAllTemplates,
+  showActions,
+  disableActions,
+  onSave,
+  onCancel,
 }) => {
   const webServices: WebServicesFormData = formData.webServices || {
     sunatUsername: "",
@@ -89,96 +99,40 @@ export const WebServicesForm: React.FC<WebServicesFormProps> = ({
 
   return (
     <React.Fragment>
-      <Stack hasGutter={true}>
-        <StackItem>
-          <TextContent>
-            <Text component="h1">Credenciales</Text>
-          </TextContent>
-        </StackItem>
-        <StackItem>
-          <Form>
-            <FormGroup
-              label="Usuario"
-              isRequired
-              fieldId="sunatUsername"
-              validated={getValidated(
-                validString(sunatUsername),
-                dirty.sunatUsername
-              )}
-              helperTextInvalid="Ingrese in valor válido"
-            >
-              <TextInput
-                isRequired
-                type="text"
-                id="sunatUsername"
-                name="sunatUsername"
-                aria-describedby="sunatUsername"
-                value={sunatUsername}
-                onChange={(_, event) =>
-                  handleChange({
-                    sunatUsername: event.currentTarget.value,
-                  })
-                }
-              />
-            </FormGroup>
-            <FormGroup
-              label="Contraseña"
-              isRequired
-              fieldId="sunatPassword"
-              validated={getValidated(
-                validString(sunatPassword),
-                dirty.sunatPassword
-              )}
-              helperTextInvalid="Ingrese un valor válido"
-            >
-              <TextInput
-                isRequired
-                type="password"
-                id="sunatPassword"
-                name="sunatPassword"
-                aria-describedby="sunatPassword"
-                value={sunatPassword}
-                onChange={(_, event) =>
-                  handleChange({
-                    sunatPassword: event.currentTarget.value,
-                  })
-                }
-              />
-            </FormGroup>
-          </Form>
-        </StackItem>
-        <StackItem>
-          <TextContent>
-            <Text component="h1">Servicios Web</Text>
-          </TextContent>
-        </StackItem>
-        {wsTemplates && (
+      <Form>
+        <Stack hasGutter={true}>
           <StackItem>
-            <Flex>
-              {wsTemplates.map((option, index) => (
-                <FlexItem key={index}>
-                  <Button
-                    variant="tertiary"
-                    icon={<CloneIcon />}
-                    onClick={() => {
-                      handleChange({
-                        ...webServices,
-                        sunatUrlFactura: option.sunatUrlFactura,
-                        sunatUrlGuiaRemision: option.sunatUrlGuiaRemision,
-                        sunatUrlPercepcionRetencion:
-                          option.sunatUrlPercepcionRetencion,
-                      });
-                    }}
-                  >
-                    {option.name}
-                  </Button>
-                </FlexItem>
-              ))}
-            </Flex>
+            <TextContent>
+              <Text component="h2">Servicios Web</Text>
+            </TextContent>
           </StackItem>
-        )}
-        <StackItem>
-          <Form>
+          {wsTemplates && (
+            <StackItem>
+              <Flex>
+                {wsTemplates.map((option, index) => (
+                  <FlexItem key={index}>
+                    <Button
+                      type="button"
+                      variant="tertiary"
+                      icon={<CloneIcon />}
+                      onClick={() => {
+                        handleChange({
+                          ...webServices,
+                          sunatUrlFactura: option.sunatUrlFactura,
+                          sunatUrlGuiaRemision: option.sunatUrlGuiaRemision,
+                          sunatUrlPercepcionRetencion:
+                            option.sunatUrlPercepcionRetencion,
+                        });
+                      }}
+                    >
+                      {option.name}
+                    </Button>
+                  </FlexItem>
+                ))}
+              </Flex>
+            </StackItem>
+          )}
+          <StackItem>
             <FormGroup
               label="Factura"
               isRequired
@@ -251,9 +205,78 @@ export const WebServicesForm: React.FC<WebServicesFormProps> = ({
                 }
               />
             </FormGroup>
-          </Form>
-        </StackItem>
-      </Stack>
+          </StackItem>
+          <StackItem>
+            <TextContent>
+              <Text component="h2">Credenciales</Text>
+            </TextContent>
+          </StackItem>
+          <StackItem>
+            <FormGroup
+              label="Usuario"
+              isRequired
+              fieldId="sunatUsername"
+              validated={getValidated(
+                validString(sunatUsername),
+                dirty.sunatUsername
+              )}
+              helperTextInvalid="Ingrese in valor válido"
+            >
+              <TextInput
+                isRequired
+                type="text"
+                id="sunatUsername"
+                name="sunatUsername"
+                aria-describedby="sunatUsername"
+                value={sunatUsername}
+                onChange={(_, event) =>
+                  handleChange({
+                    sunatUsername: event.currentTarget.value,
+                  })
+                }
+              />
+            </FormGroup>
+            <FormGroup
+              label="Contraseña"
+              isRequired
+              fieldId="sunatPassword"
+              validated={getValidated(
+                validString(sunatPassword),
+                dirty.sunatPassword
+              )}
+              helperTextInvalid="Ingrese un valor válido"
+            >
+              <TextInput
+                isRequired
+                type="password"
+                id="sunatPassword"
+                name="sunatPassword"
+                aria-describedby="sunatPassword"
+                value={sunatPassword}
+                onChange={(_, event) =>
+                  handleChange({
+                    sunatPassword: event.currentTarget.value,
+                  })
+                }
+              />
+            </FormGroup>
+            {showActions && (
+              <ActionGroup>
+                <Button
+                  variant={ButtonVariant.primary}
+                  onClick={onSave}
+                  isDisabled={disableActions}
+                >
+                  Guardar
+                </Button>
+                <Button variant={ButtonVariant.link} onClick={onCancel}>
+                  Cancelar
+                </Button>
+              </ActionGroup>
+            )}
+          </StackItem>
+        </Stack>
+      </Form>
     </React.Fragment>
   );
 };

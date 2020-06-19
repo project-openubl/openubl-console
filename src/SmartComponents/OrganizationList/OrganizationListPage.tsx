@@ -114,11 +114,7 @@ export class OrganizationList extends React.Component<Props, State> {
         return {
           cells: [
             {
-              title: (
-                <Link to={`/organizations/manage/${item.id}/keys`}>
-                  {item.name}
-                </Link>
-              ),
+              title: <Link to={`/organizations/${item.id}`}>{item.name}</Link>,
             },
             {
               title: item.description ? (
@@ -139,9 +135,7 @@ export class OrganizationList extends React.Component<Props, State> {
 
   handleEditar = (event: React.MouseEvent, rowIndex: number): void => {
     const { history, organizations } = this.props;
-    history.push(
-      "/organizations/manage/" + organizations.data[rowIndex].id + "/edit"
-    );
+    history.push("/organizations/" + organizations.data[rowIndex].id);
   };
 
   handleEliminar = (event: React.MouseEvent, rowIndex: number) => {
@@ -348,7 +342,7 @@ export class OrganizationList extends React.Component<Props, State> {
               placeholder="Filter by name"
             />
             <ToolbarItem>
-              <Link to="/organizations/create">
+              <Link to="/create-organization">
                 <Button aria-label="Crear organización">
                   Crear organización
                 </Button>
