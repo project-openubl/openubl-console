@@ -4,8 +4,8 @@ import { AppRoutes } from "./Routes";
 
 import "./App.scss";
 
-import { DefaultLayout } from "./PresentationalComponents/DefaultLayout";
-import { SecuredComponent } from "./PresentationalComponents/SecuredComponent";
+import { DefaultLayout } from "./PresentationalComponents/Layout/DefaultLayout";
+import { SecuredComponent } from "./PresentationalComponents/Components/SecuredComponent";
 import DeleteMessageDialog from "./SmartComponents/DeleteDialog";
 
 import "@redhat-cloud-services/frontend-components-notifications/index.css";

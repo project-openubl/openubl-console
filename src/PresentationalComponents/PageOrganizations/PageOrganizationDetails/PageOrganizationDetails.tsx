@@ -16,7 +16,7 @@ import { AppRouterProps } from "../../../models/routerProps";
 import OrganizationPageSection from "../../../SmartComponents/OrganizationPageSection";
 import OrganizationInfo from "../../../SmartComponents/OrganizationDetails/OrganizationInfo";
 import OrganizationReview from "../../../SmartComponents/OrganizationReview";
-import WebServices from "../../../SmartComponents/WebServices";
+import WebServices from "../../../SmartComponents/OrganizationDetails/Sunat";
 import LegalEntity from "../../../SmartComponents/OrganizationDetails/LegalEntity";
 import Address from "../../../SmartComponents/OrganizationDetails/Address";
 import Contact from "../../../SmartComponents/OrganizationDetails/Contact";

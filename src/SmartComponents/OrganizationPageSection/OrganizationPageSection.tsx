@@ -6,8 +6,8 @@ import {
   LevelItem,
 } from "@patternfly/react-core";
 import { OrganizationRepresentation } from "../../models/api";
-import { ResourceBadge } from "../../PresentationalComponents/ResourceBadge";
-import { OrganizationActions } from "../../PresentationalComponents/OrganizationDetailsForm/OrganizationActions/OrganizationActions";
+import { ResourceBadge } from "../../PresentationalComponents/Components/ResourceBadge";
+import { OrganizationActions } from "../../PresentationalComponents/Components/OrganizationDetailsForm/OrganizationActions/OrganizationActions";
 import { AppRouterProps } from "../../models/routerProps";
 import { deleteDialogActions } from "../../store/deleteDialog";
 

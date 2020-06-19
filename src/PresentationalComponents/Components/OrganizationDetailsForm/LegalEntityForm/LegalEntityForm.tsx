@@ -7,9 +7,12 @@ import {
   Button,
   ButtonVariant,
 } from "@patternfly/react-core";
-import { OrganizationFormData, LegalEntityFormData } from "../../../models/ui";
-import { notEmpty, size, pattern } from "../../../utils/validation";
-import { getValidated } from "../../../utils/forms";
+import {
+  OrganizationFormData,
+  LegalEntityFormData,
+} from "../../../../models/ui";
+import { notEmpty, size, pattern } from "../../../../utils/validation";
+import { getValidated } from "../../../../utils/forms";
 
 export interface LegalEntityFormProps {
   formData: OrganizationFormData;

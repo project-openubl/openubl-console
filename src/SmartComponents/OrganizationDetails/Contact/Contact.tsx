@@ -3,10 +3,10 @@ import { AxiosError } from "axios";
 import { OrganizationRepresentation } from "../../../models/api";
 import { FetchStatus } from "../../../store/common";
 import { AppRouterProps } from "../../../models/routerProps";
-import { ArticleSkeleton } from "../../../PresentationalComponents/Skeleton/ArticleSkeleton";
+import { ArticleSkeleton } from "../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../../models/ui";
-import { ContactForm } from "../../../PresentationalComponents/OrganizationDetailsForm/ContactForm";
+import { ContactForm } from "../../../PresentationalComponents/Components/OrganizationDetailsForm/ContactForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;

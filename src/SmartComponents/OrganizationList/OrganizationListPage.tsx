@@ -33,7 +33,7 @@ import {
 import { FetchStatus } from "../../store/common";
 import { deleteDialogActions } from "../../store/deleteDialog";
 import { AppRouterProps } from "../../models/routerProps";
-import { FilterToolbarItem } from "../../PresentationalComponents/FilterToolbarItem";
+import { FilterToolbarItem } from "../../PresentationalComponents/Components/FilterToolbarItem";
 import { debouncedFetch } from "../../utils/debounce";
 
 interface StateToProps {

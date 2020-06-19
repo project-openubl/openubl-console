@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { OrganizationRepresentation } from "../../models/api";
-import { FetchStatus } from "../../store/common";
-import { AppRouterProps } from "../../models/routerProps";
-import { ArticleSkeleton } from "../../PresentationalComponents/Skeleton/ArticleSkeleton";
+import { OrganizationRepresentation } from "../../../models/api";
+import { FetchStatus } from "../../../store/common";
+import { AppRouterProps } from "../../../models/routerProps";
+import { ArticleSkeleton } from "../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
-import { OrganizationFormData } from "../../models/ui";
-import SunatForm from "../SunatForm";
+import { OrganizationFormData } from "../../../models/ui";
+import SunatForm from "../../SunatForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
@@ -22,14 +22,11 @@ interface DispatchToProps {
   ) => Promise<void>;
 }
 
-interface WebServicesProps
-  extends StateToProps,
-    DispatchToProps,
-    AppRouterProps {
+interface SunatProps extends StateToProps, DispatchToProps, AppRouterProps {
   organizationId: string;
 }
 
-export const WebServices: React.FC<WebServicesProps> = ({
+export const Sunat: React.FC<SunatProps> = ({
   organizationId,
   organization,
   organizationFetchStatus,

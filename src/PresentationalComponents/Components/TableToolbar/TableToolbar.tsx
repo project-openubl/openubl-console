@@ -24,7 +24,7 @@ import {
 import { SearchIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import { global_danger_color_200 as globalDangerColor200 } from "@patternfly/react-tokens";
 
-import { FetchStatus } from "../../store/common";
+import { FetchStatus } from "../../../store/common";
 import { AxiosError } from "axios";
 
 export interface TableToolbarProps {

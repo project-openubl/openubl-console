@@ -1,11 +1,11 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { WebServices } from "./WebServices";
-import { createMapStateToProps } from "../../store/common";
+import { Sunat } from "./Sunat";
+import { createMapStateToProps } from "../../../store/common";
 import {
   organizationActions,
   organizationSelectors,
-} from "../../store/organization";
+} from "../../../store/organization";
 
 const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   organization: organizationSelectors.selectOrganization(
@@ -27,6 +27,4 @@ const mapDispatchToProps = {
   updateOrganization: organizationActions.requestUpdateOrganization,
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(WebServices)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sunat));

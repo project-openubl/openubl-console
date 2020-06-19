@@ -8,9 +8,9 @@ import {
   PageHeaderToolsItem,
 } from "@patternfly/react-core";
 
-import navBrandImage from "../../logo-navbar.svg";
-import imgAvatar from "../../avatar.svg";
-import { ButtonAboutApp } from "../ButtonAboutApp";
+import navBrandImage from "../../../logo-navbar.svg";
+import imgAvatar from "../../../avatar.svg";
+import { ButtonAboutApp } from "../../Components/ButtonAboutApp";
 
 export interface HeaderProps {}
 
