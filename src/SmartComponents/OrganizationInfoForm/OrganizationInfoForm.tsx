@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   FormGroup,
@@ -11,6 +11,8 @@ import {
 import { getOrganizationByName } from "../../api/api";
 import { debouncePromise } from "../../utils/debounce";
 import { OrganizationFormData } from "../../models/ui";
+import { getValidated } from "../../utils/forms";
+import { notEmpty, pattern, size } from "../../utils/validation";
 
 export interface OrganizationInfoFormProps {
   formData: OrganizationFormData;
@@ -21,8 +23,6 @@ export interface OrganizationInfoFormProps {
   onCancel?: () => void;
 }
 
-type ValidationState = "success" | "error" | "default";
-
 export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
   formData,
   onHandleChange,
@@ -31,9 +31,48 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const [error, setError] = useState<ValidationState>("default");
-  const [errorNameInvalidText, setErrorNameInvalidText] = useState<string>();
   const { description = "", name = "" } = formData;
+
+  const [isUIFormValid, setIsUIFormValid] = useState(false);
+  const [isBDNameValid, setIsDBNameValid] = useState(false);
+  const [nameHelperTextInvalid, setNameHelperTextInvalid] = useState<string>();
+  const [dirty, setDirty] = useState<OrganizationFormData>({});
+
+  useEffect(() => {
+    setIsOrganizationInfoFormValid(isUIFormValid && isBDNameValid);
+  }, [isUIFormValid, isBDNameValid]);
+
+  const getFormValues = (values: OrganizationFormData) => {
+    return {
+      name,
+      description,
+      ...values,
+    };
+  };
+
+  const handleChange = (values: OrganizationFormData) => {
+    const data = getFormValues(values);
+    const isNameValid =
+      notEmpty(data.name) && pattern(data.name, new RegExp("^[-a-zA-Z0-9]+$"));
+    const isFormValid = isNameValid && size(data.description, 0, 255);
+
+    setIsUIFormValid(isFormValid);
+    if (isNameValid) {
+      debouncedNameValidator(data.name, setNameValidatorResult);
+    } else {
+      setNameHelperTextInvalid(
+        "Valor debe de contener solamente letras o guiones"
+      );
+    }
+
+    onHandleChange(data);
+    setDirty({ ...dirty, ...values });
+  };
+
+  const setNameValidatorResult = (backendResult: string | undefined) => {
+    setIsDBNameValid(!backendResult);
+    setNameHelperTextInvalid(backendResult);
+  };
 
   const validateName = (name: string) =>
     getOrganizationByName(name)
@@ -46,13 +85,7 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
         return "There was an error retrieving data. Check your connection and try again.";
       });
 
-  const setResult = (result: string | undefined) => {
-    setErrorNameInvalidText(result);
-    setError(result ? "error" : "success");
-    setIsOrganizationInfoFormValid(!result);
-  };
-
-  const debouncedValidator = (
+  const debouncedNameValidator = (
     name: string,
     validateCallback: (result: string | undefined) => void
   ) =>
@@ -61,23 +94,19 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
       250
     );
 
-  const handleNameChange = () => {
-    debouncedValidator(name, setResult);
-  };
-
   return (
     <Form>
       <FormGroup
         label="Nombre"
         isRequired
         fieldId="name"
-        helperText={
-          error === "success"
-            ? "Nombre disponible"
-            : "Escriba el nombre o nickname de la organización"
-        }
-        validated={error}
-        helperTextInvalid={errorNameInvalidText}
+        validated={getValidated(
+          isBDNameValid &&
+            notEmpty(name) &&
+            pattern(name, new RegExp("^[-a-zA-Z0-9]+$")),
+          dirty.name
+        )}
+        helperTextInvalid={nameHelperTextInvalid}
       >
         <TextInput
           isRequired
@@ -86,10 +115,10 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
           name="name"
           aria-describedby="name"
           value={name}
-          onBlur={handleNameChange}
           onChange={(_, event) => {
-            setError("default");
-            onHandleChange({ name: event.currentTarget.value });
+            handleChange({
+              name: event.currentTarget.value,
+            });
           }}
           isDisabled={showActions}
         />
@@ -101,7 +130,9 @@ export const OrganizationInfoForm: React.FC<OrganizationInfoFormProps> = ({
           name="description"
           value={description}
           onChange={(_, event) =>
-            onHandleChange({ description: event.currentTarget.value })
+            handleChange({
+              description: event.currentTarget.value,
+            })
           }
         />
       </FormGroup>

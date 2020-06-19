@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { WebServicesForm } from "./WebServicesForm";
+import { SunatForm } from "./SunatForm";
 import { createMapStateToProps } from "../../store/common";
 import {
   wsTemplatesSelectors,
@@ -16,4 +16,4 @@ const mapDispatchToProps = {
   fetchAllTemplates: wsTemplatesActions.fetchAllWSTemplates,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(WebServicesForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SunatForm);

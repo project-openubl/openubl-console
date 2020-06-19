@@ -5,7 +5,7 @@ import { OrganizationInfoForm } from "../OrganizationInfoForm";
 import { LegalEntityForm } from "../LegalEntityForm";
 import { AddressForm } from "../AddressForm";
 import { ContactForm } from "../ContactForm";
-import WebServicesForm from "../WebServicesForm";
+import SunatForm from "../SunatForm";
 import { OrganizationReviewForm } from "../OrganizationReviewForm/OrganizationReviewForm";
 import { AppRouterProps } from "../../models/routerProps";
 import { OrganizationRepresentation } from "../../models/api";
@@ -33,9 +33,9 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
     setIsOrganizationInfoFormValid,
   ] = useState(false);
   const [isLegalEntityFormValid, setIsLegalEntityFormValid] = useState(false);
-  const [isAddressFormValid, setIsAddressFormValid] = useState(false);
+  const [isAddressFormValid, setIsAddressFormValid] = useState(true);
   const [isContactFormValid, setIsContactFormValid] = useState(true);
-  const [isWebServicesFormValid, setIsWebServicesFormValid] = useState(false);
+  const [isSunatFormValid, setIsSunatFormValid] = useState(false);
   const [stepIdReached, setStepIdReached] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,12 +71,9 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
     setIsContactFormValid(isValid);
   };
 
-  const handleWebServicesChange = (
-    data: OrganizationFormData,
-    isValid: boolean
-  ) => {
+  const handleSunatChange = (data: OrganizationFormData, isValid: boolean) => {
     handleChange(data);
-    setIsWebServicesFormValid(isValid);
+    setIsSunatFormValid(isValid);
   };
 
   const onWizardNext = (newStep: any) => {
@@ -125,7 +122,9 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
   const onCancel = () => {
     addAlert({
       variant: "warning",
-      title: "La creación de la organización fue cancelada por el usuario",
+      title: "Operación cancelada",
+      description:
+        "La creación de la organización fue cancelada por el usuario",
       dismissDelay: 8000,
       dismissable: false,
     });
@@ -204,12 +203,9 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
         isAddressFormValid &&
         isContactFormValid,
       component: (
-        <WebServicesForm
-          formData={formData}
-          onHandleChange={handleWebServicesChange}
-        />
+        <SunatForm formData={formData} onHandleChange={handleSunatChange} />
       ),
-      enableNext: isWebServicesFormValid,
+      enableNext: isSunatFormValid,
     },
     {
       id: 6,

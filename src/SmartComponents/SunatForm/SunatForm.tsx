@@ -31,7 +31,7 @@ interface DispatchToProps {
   fetchAllTemplates: () => Promise<void>;
 }
 
-export interface WebServicesFormProps extends StateToProps, DispatchToProps {
+export interface SunatFormProps extends StateToProps, DispatchToProps {
   formData: OrganizationFormData;
   onHandleChange: (data: OrganizationFormData, isValid: boolean) => void;
   showActions?: boolean;
@@ -40,7 +40,7 @@ export interface WebServicesFormProps extends StateToProps, DispatchToProps {
   onCancel?: () => void;
 }
 
-export const WebServicesForm: React.FC<WebServicesFormProps> = ({
+export const SunatForm: React.FC<SunatFormProps> = ({
   formData,
   onHandleChange,
   wsTemplates,

@@ -6,7 +6,7 @@ import { AppRouterProps } from "../../models/routerProps";
 import { ArticleSkeleton } from "../../PresentationalComponents/Skeleton/ArticleSkeleton";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../models/ui";
-import WebServicesForm from "../WebServicesForm";
+import SunatForm from "../SunatForm";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
@@ -99,7 +99,7 @@ export const WebServices: React.FC<WebServicesProps> = ({
       )}
       <Grid lg={6}>
         <GridItem>
-          <WebServicesForm
+          <SunatForm
             formData={formData}
             onHandleChange={handleWebServicesChange}
             showActions
