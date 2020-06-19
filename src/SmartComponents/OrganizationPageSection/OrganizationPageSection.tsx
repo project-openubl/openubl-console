@@ -7,23 +7,58 @@ import {
 } from "@patternfly/react-core";
 import { OrganizationRepresentation } from "../../models/api";
 import { ResourceBadge } from "../../PresentationalComponents/ResourceBadge";
-import { OrganizationActions } from "../../PresentationalComponents/OrganizationActions/OrganizationActions";
+import { OrganizationActions } from "../../PresentationalComponents/OrganizationDetailsForm/OrganizationActions/OrganizationActions";
+import { AppRouterProps } from "../../models/routerProps";
+import { deleteDialogActions } from "../../store/deleteDialog";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
 }
 
-interface DispatchToProps {}
+interface DispatchToProps {
+  deleteOrganization: (organizationId: string) => Promise<void>;
+  showDeleteDialog: typeof deleteDialogActions.openModal;
+  closeDeleteDialog: typeof deleteDialogActions.closeModal;
+}
 
 export interface OrganizationPageSectionProps
   extends StateToProps,
-    DispatchToProps {
+    DispatchToProps,
+    AppRouterProps {
   organizationId: string;
 }
 
 export const OrganizationPageSection: React.FC<OrganizationPageSectionProps> = ({
   organization,
+  showDeleteDialog,
+  closeDeleteDialog,
+  deleteOrganization,
+  history: { push },
 }) => {
+  const onOrganizationEdit = () => {
+    if (organization) {
+      push("/organizations/" + organization.id);
+    }
+  };
+
+  const onOrganizationDelete = () => {
+    if (organization) {
+      showDeleteDialog({
+        name: organization.name,
+        type: "organización",
+        onDelete: () => {
+          deleteOrganization(organization.id).then(() => {
+            closeDeleteDialog();
+            push("/");
+          });
+        },
+        onCancel: () => {
+          closeDeleteDialog();
+        },
+      });
+    }
+  };
+
   return (
     <PageSection variant={PageSectionVariants.light}>
       <Level>
@@ -37,7 +72,10 @@ export const OrganizationPageSection: React.FC<OrganizationPageSectionProps> = (
           )}
         </LevelItem>
         <LevelItem>
-          <OrganizationActions onEdit={() => {}} onDelete={() => {}} />
+          <OrganizationActions
+            onEdit={onOrganizationEdit}
+            onDelete={onOrganizationDelete}
+          />
         </LevelItem>
       </Level>
     </PageSection>

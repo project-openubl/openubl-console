@@ -100,18 +100,18 @@ export const CreateOrganizationWizard: React.FC<Props> = ({
         sunatUrlPercepcionRetencion:
           formData.webServices?.sunatUrlPercepcionRetencion || "",
         domicilioFiscal: {
-          ubigeo: formData.legalEntityAddress?.ubigeo || "",
-          codigoLocal: formData.legalEntityAddress?.codigoLocal,
-          urbanizacion: formData.legalEntityAddress?.urbanizacion,
-          provincia: formData.legalEntityAddress?.provincia,
-          departamento: formData.legalEntityAddress?.departamento,
-          distrito: formData.legalEntityAddress?.distrito,
-          direccion: formData.legalEntityAddress?.direccion,
-          codigoPais: formData.legalEntityAddress?.codigoPais,
+          ubigeo: formData.legalEntityAddress?.ubigeo || undefined,
+          codigoLocal: formData.legalEntityAddress?.codigoLocal || undefined,
+          urbanizacion: formData.legalEntityAddress?.urbanizacion || undefined,
+          provincia: formData.legalEntityAddress?.provincia || undefined,
+          departamento: formData.legalEntityAddress?.departamento || undefined,
+          distrito: formData.legalEntityAddress?.distrito || undefined,
+          direccion: formData.legalEntityAddress?.direccion || undefined,
+          codigoPais: formData.legalEntityAddress?.codigoPais || undefined,
         },
         contacto: {
-          telefono: formData.legalEntityContact?.telefono,
-          email: formData.legalEntityContact?.email,
+          telefono: formData.legalEntityContact?.telefono || undefined,
+          email: formData.legalEntityContact?.email || undefined,
         },
       },
     };

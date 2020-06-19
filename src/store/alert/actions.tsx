@@ -25,7 +25,7 @@ export const alertFetchEndpoint = (err: AxiosError) => {
         variant: "danger",
         title: err.message,
         description: errorDescription,
-        dismissable: true,
+        dismissable: false,
       })
     );
   };

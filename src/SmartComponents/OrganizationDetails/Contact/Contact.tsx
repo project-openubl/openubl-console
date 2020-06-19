@@ -75,8 +75,8 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
           ...organization.settings,
           contacto: {
             ...organization.settings.contacto,
-            email: formData.legalEntityContact?.email || "",
-            telefono: formData.legalEntityContact?.telefono || "",
+            email: formData.legalEntityContact?.email || undefined,
+            telefono: formData.legalEntityContact?.telefono || undefined,
           },
         },
       };

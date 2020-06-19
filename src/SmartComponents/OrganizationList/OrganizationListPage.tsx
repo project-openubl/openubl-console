@@ -154,6 +154,7 @@ export class OrganizationList extends React.Component<Props, State> {
       onDelete: () => {
         deleteOrganization(organization.id).then(() => {
           closeDeleteDialog();
+          this.refreshData();
         });
       },
       onCancel: () => {

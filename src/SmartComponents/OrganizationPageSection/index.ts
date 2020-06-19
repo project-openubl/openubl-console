@@ -1,7 +1,12 @@
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { OrganizationPageSection } from "./OrganizationPageSection";
 import { createMapStateToProps } from "../../store/common";
-import { organizationSelectors } from "../../store/organization";
+import {
+  organizationSelectors,
+  organizationActions,
+} from "../../store/organization";
+import { deleteDialogActions } from "../../store/deleteDialog";
 
 const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   organization: organizationSelectors.selectOrganization(
@@ -10,9 +15,12 @@ const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   ),
 }));
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  deleteOrganization: organizationActions.deleteOrganization,
+  showDeleteDialog: deleteDialogActions.openModal,
+  closeDeleteDialog: deleteDialogActions.closeModal,
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OrganizationPageSection);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(OrganizationPageSection)
+);

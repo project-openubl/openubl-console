@@ -62,7 +62,7 @@ export const size = (
   }
 
   if (typeof val === "string") {
-    return val.trim().length >= min && val.trim.length <= max;
+    return val.length >= min && val.length <= max;
   } else if (Array.isArray(val)) {
     return val.length >= min && val.length <= max;
   } else if (val instanceof Map) {
@@ -70,6 +70,24 @@ export const size = (
   }
 
   throw new Error("Unsupported type");
+};
+
+/**
+ * The value size must be between the specified boundaries (included).
+ * Supported types are: string, array, map
+ * {null} elements are considered valid.
+ * @param val value to be evaluated
+ */
+export const sizeEmptyAllowed = (
+  val: undefined | null | string,
+  min: number,
+  max: number = Number.MAX_VALUE
+): boolean => {
+  if (val === undefined || val === null || val === "") {
+    return true;
+  }
+
+  return size(val, min, max);
 };
 
 /**
@@ -90,10 +108,18 @@ export const pattern = (val: undefined | null | string, regExp: RegExp) => {
  * @param val value to be evaluated
  */
 export const validEmail = (val: string | undefined): boolean => {
-  if (val === undefined || val === null || val === "") {
+  if (val === undefined || val === null) {
     return true;
   }
 
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(val).toLowerCase());
+};
+
+export const validEmailAllowEmpty = (val: string | undefined): boolean => {
+  if (val === undefined || val === null || val === "") {
+    return true;
+  }
+
+  return validEmail(val);
 };

@@ -67,7 +67,7 @@ export const OrganizationInfo: React.FC<OrganizationInfoProps> = ({
     const data: OrganizationRepresentation = {
       ...organization,
       name: formData.name || "",
-      description: formData.description || "",
+      description: formData.description || undefined,
     } as OrganizationRepresentation;
 
     await updateOrganization(organizationId, data);

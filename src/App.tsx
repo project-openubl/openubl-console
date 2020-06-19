@@ -6,6 +6,7 @@ import "./App.scss";
 
 import { DefaultLayout } from "./PresentationalComponents/DefaultLayout";
 import { SecuredComponent } from "./PresentationalComponents/SecuredComponent";
+import DeleteMessageDialog from "./SmartComponents/DeleteDialog";
 
 import "@redhat-cloud-services/frontend-components-notifications/index.css";
 const frontendComponentsNotifications = require("@redhat-cloud-services/frontend-components-notifications");
@@ -28,6 +29,7 @@ const App: React.FC = () => {
           renderApp()
         )}
         <NotificationsPortal />
+        <DeleteMessageDialog />
       </HashRouter>
     </React.Fragment>
   );

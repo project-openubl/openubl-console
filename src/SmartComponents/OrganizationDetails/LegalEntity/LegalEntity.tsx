@@ -76,7 +76,8 @@ export const LegalEntity: React.FC<WebServicesProps> = ({
           ...organization.settings,
           ruc: formData.legalEntityInfo?.ruc || "",
           razonSocial: formData.legalEntityInfo?.razonSocial || "",
-          nombreComercial: formData.legalEntityInfo?.nombreComercial || "",
+          nombreComercial:
+            formData.legalEntityInfo?.nombreComercial || undefined,
         },
       };
 

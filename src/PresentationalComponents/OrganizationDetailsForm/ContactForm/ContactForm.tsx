@@ -11,7 +11,7 @@ import {
   OrganizationFormData,
   LegalEntityContactFormData,
 } from "../../../models/ui";
-import { validEmail } from "../../../utils/validation";
+import { validEmailAllowEmpty } from "../../../utils/validation";
 import { getValidated } from "../../../utils/forms";
 
 export interface WebServicesFormProps {
@@ -49,7 +49,7 @@ export const ContactForm: React.FC<WebServicesFormProps> = ({
 
   const handleChange = (values: LegalEntityContactFormData) => {
     const data = getFormValues(values);
-    const isFormValid = validEmail(data.email);
+    const isFormValid = validEmailAllowEmpty(data.email);
     onHandleChange({ legalEntityContact: data }, isFormValid);
     setDirty({ ...dirty, ...values });
   };
@@ -74,7 +74,7 @@ export const ContactForm: React.FC<WebServicesFormProps> = ({
         label="Email"
         isRequired={false}
         fieldId="email"
-        validated={getValidated(validEmail(email), dirty.email)}
+        validated={getValidated(validEmailAllowEmpty(email), dirty.email)}
         helperTextInvalid="Ingrese un valor válido"
       >
         <TextInput

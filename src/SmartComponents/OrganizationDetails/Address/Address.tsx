@@ -48,14 +48,21 @@ export const Address: React.FC<AddressProps> = ({
     if (organization) {
       setValues({
         legalEntityAddress: {
-          ubigeo: organization.settings.domicilioFiscal?.ubigeo,
-          departamento: organization.settings.domicilioFiscal?.departamento,
-          provincia: organization.settings.domicilioFiscal?.provincia,
-          distrito: organization.settings.domicilioFiscal?.distrito,
-          urbanizacion: organization.settings.domicilioFiscal?.urbanizacion,
-          codigoLocal: organization.settings.domicilioFiscal?.codigoLocal,
-          direccion: organization.settings.domicilioFiscal?.direccion,
-          codigoPais: organization.settings.domicilioFiscal?.codigoPais,
+          ubigeo: organization.settings.domicilioFiscal?.ubigeo || undefined,
+          departamento:
+            organization.settings.domicilioFiscal?.departamento || undefined,
+          provincia:
+            organization.settings.domicilioFiscal?.provincia || undefined,
+          distrito:
+            organization.settings.domicilioFiscal?.distrito || undefined,
+          urbanizacion:
+            organization.settings.domicilioFiscal?.urbanizacion || undefined,
+          codigoLocal:
+            organization.settings.domicilioFiscal?.codigoLocal || undefined,
+          direccion:
+            organization.settings.domicilioFiscal?.direccion || undefined,
+          codigoPais:
+            organization.settings.domicilioFiscal?.codigoPais || undefined,
         },
       });
     }

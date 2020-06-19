@@ -36,7 +36,7 @@ export interface OrganizationRepresentation {
 export interface OrganizationSettingsRepresentation {
   ruc: string;
   razonSocial: string;
-  nombreComercial: string;
+  nombreComercial?: string;
   sunatUsername: string;
   sunatPassword: string;
   sunatUrlFactura: string;
@@ -47,7 +47,7 @@ export interface OrganizationSettingsRepresentation {
 }
 
 export interface AddressRepresentation {
-  ubigeo: string;
+  ubigeo?: string;
   codigoLocal?: string;
   urbanizacion?: string;
   provincia?: string;
