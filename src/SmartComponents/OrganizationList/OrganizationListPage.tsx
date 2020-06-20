@@ -343,7 +343,7 @@ export class OrganizationList extends React.Component<Props, State> {
               placeholder="Filter by name"
             />
             <ToolbarItem>
-              <Link to="/create-organization">
+              <Link to="/organizations/~new">
                 <Button aria-label="Crear organización">
                   Crear organización
                 </Button>

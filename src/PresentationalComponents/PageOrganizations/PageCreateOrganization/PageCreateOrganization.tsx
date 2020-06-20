@@ -5,8 +5,8 @@ import {
   TextContent,
   Text,
 } from "@patternfly/react-core";
-import { AppRouterProps } from "../../models/routerProps";
-import CreateOrganizationWizard from "../../SmartComponents/CreateOrganizationWizard";
+import { AppRouterProps } from "../../../models/routerProps";
+import CreateOrganizationWizard from "../../../SmartComponents/CreateOrganizationWizard";
 
 export interface PageCreateOrganizationProps extends AppRouterProps {}
 
