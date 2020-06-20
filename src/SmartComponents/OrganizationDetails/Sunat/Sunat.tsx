@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
+import { Grid, GridItem } from "@patternfly/react-core";
 import {
   OrganizationRepresentation,
   WSTemplateRepresentation,
@@ -7,7 +8,6 @@ import {
 import { FetchStatus } from "../../../store/common";
 import { AppRouterProps } from "../../../models/routerProps";
 import { ArticleSkeleton } from "../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
-import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../../models/ui";
 import { SunatForm } from "../../../PresentationalComponents/OrganizationDetailsForm/SunatForm";
 

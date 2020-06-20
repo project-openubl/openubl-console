@@ -12,16 +12,16 @@ import {
 export const stateKey = "organizationContext";
 
 export type OrganizationContextState = Readonly<{
-  selected: OrganizationRepresentation | null;
-  organizations: OrganizationRepresentation[] | null;
-  error: AxiosError<any> | null;
+  selected: OrganizationRepresentation | undefined;
+  organizations: OrganizationRepresentation[] | undefined;
+  error: AxiosError | undefined;
   status: FetchStatus;
 }>;
 
 export const defaultState: OrganizationContextState = {
-  selected: null,
-  organizations: null,
-  error: null,
+  selected: undefined,
+  organizations: undefined,
+  error: undefined,
   status: "none",
 };
 
@@ -46,7 +46,7 @@ export function organizationContextReducer(
       return {
         ...state,
         status: "complete",
-        error: null,
+        error: undefined,
         organizations: action.payload,
       };
     case getType(fetchOrganizationsFailure):

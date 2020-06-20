@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
+import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationRepresentation } from "../../../models/api";
 import { FetchStatus } from "../../../store/common";
 import { AppRouterProps } from "../../../models/routerProps";
 import { ArticleSkeleton } from "../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
 import { OrganizationInfoForm } from "../../../PresentationalComponents/OrganizationDetailsForm/OrganizationInfoForm";
-import { Grid, GridItem } from "@patternfly/react-core";
 import { OrganizationFormData } from "../../../models/ui";
 
 interface StateToProps {

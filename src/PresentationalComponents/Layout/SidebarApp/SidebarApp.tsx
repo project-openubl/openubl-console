@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, PageSidebar, NavGroup } from "@patternfly/react-core";
+import ContextNavLink from "../../../SmartComponents/Layout/ContextNavLink";
 
 export const SidebarApp: React.FC = () => {
   const renderPageNav = () => {
@@ -12,10 +13,17 @@ export const SidebarApp: React.FC = () => {
               Organizaciones
             </NavLink>
           </NavItem>
-          <NavItem itemId={0}>
-            <NavLink to="/menu2" activeClassName="pf-m-current">
+          <NavItem>
+            <ContextNavLink to="/keys" activeClassName="pf-m-current">
+              Certificados
+            </ContextNavLink>
+          </NavItem>
+        </NavGroup>
+        <NavGroup title="Aplicación">
+          <NavItem>
+            <ContextNavLink to="/documents" activeClassName="pf-m-current">
               Documentos
-            </NavLink>
+            </ContextNavLink>
           </NavItem>
         </NavGroup>
       </Nav>
