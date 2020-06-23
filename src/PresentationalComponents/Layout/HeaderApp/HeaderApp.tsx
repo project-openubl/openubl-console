@@ -10,7 +10,7 @@ import {
 
 import navBrandImage from "../../../logo-navbar.svg";
 import imgAvatar from "../../../avatar.svg";
-import { ButtonAboutApp } from "../../Components/ButtonAboutApp";
+import { ButtonAboutApp } from "../ButtonAboutApp";
 
 export interface HeaderProps {}
 

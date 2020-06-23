@@ -6,7 +6,7 @@ import {
   Text,
 } from "@patternfly/react-core";
 import { AppRouterProps } from "../../../models/routerProps";
-import CreateOrganizationWizard from "../../../SmartComponents/CreateOrganizationWizard";
+import CreateOrganization from "../../../SmartComponents/Organizations/CreateOrganization";
 
 export interface PageCreateOrganizationProps extends AppRouterProps {}
 
@@ -19,7 +19,7 @@ export const PageCreateOrganization: React.FC<PageCreateOrganizationProps> = () 
         </TextContent>
       </PageSection>
       <PageSection>
-        <CreateOrganizationWizard />
+        <CreateOrganization />
       </PageSection>
     </React.Fragment>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { PageOrganizationList } from "./PageOrganizationList";
-import { PageOrganizationDetails } from "./PageOrganizationDetails";
+import { PageOrganizationDetails } from "./PageEditOrganization";
 import { PageCreateOrganization } from "./PageCreateOrganization";
 
 export const PageOrganizations: React.FC = () => {

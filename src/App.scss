@@ -38,3 +38,13 @@
     fill: #72767b;
   }
 }
+
+:root {
+  --oul-c-page__tabs-section--tabs--PaddingTop: 5px;
+  --oul-c-page__tabs-section--tabs--PaddingBottom: 0px;
+}
+
+.oul-c-page__tabs-section {
+  padding-top: var(--oul-c-page__tabs-section--tabs--PaddingTop);
+  padding-bottom: var(--oul-c-page__tabs-section--tabs--PaddingBottom);
+}

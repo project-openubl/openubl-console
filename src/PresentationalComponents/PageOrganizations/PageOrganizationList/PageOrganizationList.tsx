@@ -5,7 +5,7 @@ import {
   TextContent,
   Text,
 } from "@patternfly/react-core";
-import OrganizationList from "../../../SmartComponents/OrganizationList";
+import OrganizationList from "../../../SmartComponents/Organizations/OrganizationList";
 
 export const PageOrganizationList: React.FC = () => {
   return (
