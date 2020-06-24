@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
 import { OrganizationRepresentation } from "../../../models/api";
+import { AppRouterProps } from "../../../models/routerProps";
 
 interface StateToProps {
   ctxOrganization: OrganizationRepresentation | undefined;
@@ -9,96 +10,84 @@ interface StateToProps {
 
 interface DispatchToProps {
   selectCtxOrganization: (organization: OrganizationRepresentation) => any;
-  fetchOrganizations: () => void;
 }
 
-interface Props extends StateToProps, DispatchToProps {
+interface Props extends StateToProps, DispatchToProps, AppRouterProps {
   onSelect: (organization: OrganizationRepresentation) => any;
 }
 
 interface State {
   isOpen: boolean;
   searchValue: string;
-  filteredItems: OrganizationRepresentation[];
 }
 
-export class OrganizationContextSelector extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      searchValue: "",
-      filteredItems: props.ctxOrganizations,
-    };
-  }
+export const OrganizationContextSelector: React.FC<Props> = ({
+  ctxOrganization,
+  ctxOrganizations,
+  selectCtxOrganization,
+  onSelect,
+  match,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
-  componentDidMount() {
-    this.props.fetchOrganizations();
-  }
-
-  componentDidUpdate(_prevProps: Props) {
-    if (_prevProps.ctxOrganizations !== this.props.ctxOrganizations) {
-      this.setState({ filteredItems: this.props.ctxOrganizations });
+  useEffect(() => {
+    const organization = ctxOrganizations.find(
+      (p) => p.id === match.params.organizationId
+    );
+    if (organization) {
+      selectCtxOrganization(organization);
     }
-  }
+  }, [match, ctxOrganizations, selectCtxOrganization]);
 
-  onToggle = (isOpen: any) => {
-    this.setState({
-      // Workaround until <ContextSelector> props are fixed
-      isOpen: !this.state.isOpen,
-    });
+  const onToggle = (_: any, value: boolean) => {
+    setIsOpen(value);
   };
 
-  onContextSelect = (event: any, value: any) => {
-    const { ctxOrganizations, selectCtxOrganization, onSelect } = this.props;
-
+  const onContextSelect = (_: any, value: any) => {
     const organization = ctxOrganizations.find((p) => p.name === value);
     if (organization) {
-      this.setState({ isOpen: !this.state.isOpen }, () => {
-        selectCtxOrganization(organization);
-        onSelect(organization);
-      });
+      setIsOpen(!isOpen);
+      setSearchValue("");
+      selectCtxOrganization(organization);
+      onSelect(organization);
     }
   };
 
-  onSearchInputChange = (value: string) => {
-    this.setState({ searchValue: value });
+  const onSearchInputChange = (value: string) => {
+    setSearchValue(value);
   };
 
-  onSearchButtonClick = (event: any) => {
-    const filtered: OrganizationRepresentation[] =
-      this.state.searchValue.trim() === ""
-        ? this.props.ctxOrganizations
-        : this.props.ctxOrganizations.filter(
-            (org: OrganizationRepresentation) =>
-              org.name
-                .toLowerCase()
-                .indexOf(this.state.searchValue.toLowerCase()) !== -1
-          );
-
-    this.setState({ filteredItems: filtered || [] });
+  const getFilteredOrgs = (
+    organizations: OrganizationRepresentation[],
+    filterText: string
+  ): OrganizationRepresentation[] => {
+    return filterText.trim() === ""
+      ? organizations || []
+      : organizations.filter(
+          (org: OrganizationRepresentation) =>
+            org.name.toLowerCase().indexOf(filterText.toLowerCase()) !== -1
+        );
   };
 
-  render() {
-    const { ctxOrganization } = this.props;
-    const { isOpen, searchValue, filteredItems } = this.state;
-    return (
-      <ContextSelector
-        toggleText={ctxOrganization ? ctxOrganization.name : ""}
-        onSearchInputChange={this.onSearchInputChange}
-        isOpen={isOpen}
-        searchInputValue={searchValue}
-        onToggle={this.onToggle}
-        onSelect={this.onContextSelect}
-        onSearchButtonClick={this.onSearchButtonClick}
-        screenReaderLabel="Selected organization:"
-      >
-        {filteredItems.map(
-          (item: OrganizationRepresentation, index: number) => (
-            <ContextSelectorItem key={index}>{item.name}</ContextSelectorItem>
-          )
-        )}
-      </ContextSelector>
-    );
-  }
-}
+  return (
+    <ContextSelector
+      toggleText={`Organization: ${
+        ctxOrganization ? ctxOrganization.name : ""
+      }`}
+      onSearchInputChange={onSearchInputChange}
+      isOpen={isOpen}
+      searchInputValue={searchValue}
+      onToggle={onToggle}
+      onSelect={onContextSelect}
+      screenReaderLabel="Selected organization:"
+      className="oul-c-context-selector"
+    >
+      {getFilteredOrgs(ctxOrganizations, searchValue).map(
+        (item: OrganizationRepresentation, index: number) => (
+          <ContextSelectorItem key={index}>{item.name}</ContextSelectorItem>
+        )
+      )}
+    </ContextSelector>
+  );
+};

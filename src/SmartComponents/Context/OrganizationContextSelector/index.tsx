@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { createMapStateToProps } from "../../../store/common";
 import {
   organizationContextSelectors,
@@ -14,10 +15,8 @@ const mapStateToProps = createMapStateToProps((state) => ({
 
 const mapDispatchToProps = {
   selectCtxOrganization: organizationContextActions.selectOrganizationContext,
-  fetchOrganizations: organizationContextActions.fetchOrganizations,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OrganizationContextSelector);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(OrganizationContextSelector)
+);

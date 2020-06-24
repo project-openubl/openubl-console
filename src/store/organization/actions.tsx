@@ -125,7 +125,9 @@ export const requestUpdateOrganization = (
         dispatch(updateOrganizationSuccess(res.data, meta));
         alert({
           title: `Actualizado satisfactoriamente`,
-          description: `Organización ${organization.name} actualizada`,
+          description: `Organización ${
+            organization.name ? organization.name : ""
+          } actualizada`,
           variant: "success",
         })(dispatch);
       })

@@ -15,7 +15,7 @@ export const SidebarApp: React.FC = () => {
           </NavItem>
           <NavItem>
             <OrganizationContextNavLink
-              to="/keys/org/:organizationId"
+              to="/server/org/:organizationId/keys"
               activeClassName="pf-m-current"
             >
               Certificados
@@ -25,7 +25,7 @@ export const SidebarApp: React.FC = () => {
         <NavGroup title="Aplicación">
           <NavItem>
             <OrganizationContextNavLink
-              to="/documents"
+              to="/server/org/:organizationId/documents"
               activeClassName="pf-m-current"
             >
               Documentos

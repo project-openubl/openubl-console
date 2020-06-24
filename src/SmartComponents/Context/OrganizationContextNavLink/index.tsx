@@ -5,6 +5,7 @@ import { organizationContextSelectors } from "../../../store/organizationContext
 
 const mapStateToProps = createMapStateToProps((state) => ({
   contextOrganization: organizationContextSelectors.selectedOrganization(state),
+  contextOrganizations: organizationContextSelectors.organizations(state),
 }));
 
 const mapDispatchToProps = {};

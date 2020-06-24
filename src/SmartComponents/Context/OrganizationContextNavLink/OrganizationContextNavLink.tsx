@@ -4,25 +4,36 @@ import { OrganizationRepresentation } from "../../../models/api";
 
 interface StateToProps {
   contextOrganization: OrganizationRepresentation | undefined;
+  contextOrganizations: OrganizationRepresentation[];
 }
 
 interface DispatchToProps {}
 
-interface ContextNavLinkProps extends StateToProps, DispatchToProps {
+interface OrganizationContextNavLinkProps
+  extends StateToProps,
+    DispatchToProps {
   to: string;
   activeClassName: string;
   children: any;
 }
 
-export const OrganizationContextNavLink: React.FC<ContextNavLinkProps> = ({
+export const OrganizationContextNavLink: React.FC<OrganizationContextNavLinkProps> = ({
   to,
   activeClassName,
   children,
   contextOrganization,
+  contextOrganizations,
 }) => {
   return (
     <NavLink
-      to={contextOrganization ? `${to}/${contextOrganization.id}` : to}
+      to={to.replace(
+        ":organizationId",
+        contextOrganization
+          ? contextOrganization.id
+          : contextOrganizations.length > 0
+          ? contextOrganizations[0].id
+          : "master"
+      )}
       activeClassName={activeClassName}
       className="pf-c-nav__link"
     >
