@@ -9,8 +9,7 @@ export const organizationComponentsState = (state: RootState) =>
 export const selectOrganizationComponents = (
   state: RootState,
   organizationId: string
-) =>
-  organizationComponentsState(state).byOrganizationId.get(organizationId) || [];
+) => organizationComponentsState(state).byOrganizationId.get(organizationId);
 export const selectOrganizationComponentsFetchStatus = (
   state: RootState,
   organizationId: string

@@ -6,6 +6,7 @@ import {
   KeysMetadataRepresentation,
   ComponentRepresentation,
   DocumentType,
+  ServerInfoRepresentation,
 } from "../models/api";
 
 const ORGS = "/organizations";
@@ -19,6 +20,8 @@ const DOCUMENT_CREATE =
   "/organizations/{organizationId}/documents/{documentType}/create";
 
 const TEMPLATES = "/templates";
+
+const SERVER_INFO_URL = "/server-info";
 
 export const getOrganizations = (
   name?: string,
@@ -189,4 +192,8 @@ export const getWSTemplates = (
   return ApiClient.get<
     PaginationResponseRepresentation<OrganizationRepresentation>
   >(`${TEMPLATES}/ws?${query.join("&")}`);
+};
+
+export const getServerInfo = (): AxiosPromise<ServerInfoRepresentation> => {
+  return ApiClient.get<ServerInfoRepresentation>(SERVER_INFO_URL);
 };

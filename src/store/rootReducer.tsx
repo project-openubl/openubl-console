@@ -21,6 +21,7 @@ import {
   organizationComponentsReducer,
 } from "./organizationComponents";
 import { componentStateKey, componentReducer } from "./organizationComponent";
+import { serverInfoStateKey, serverInfoReducer } from "./serverInfo";
 
 const frontendComponentsNotifications = require("@redhat-cloud-services/frontend-components-notifications");
 
@@ -37,4 +38,5 @@ export const rootReducer = combineReducers({
   [organizationKeysStateKey]: organizationKeysReducer,
   [organizationComponentsStateKey]: organizationComponentsReducer,
   [componentStateKey]: componentReducer,
+  [serverInfoStateKey]: serverInfoReducer,
 });

@@ -29,7 +29,7 @@ export interface OrganizationRepresentation {
   name: string;
   description: string;
   type: string;
-  useMasterKeys: boolean;
+  useCustomCertificates: boolean;
   settings: OrganizationSettingsRepresentation;
 }
 

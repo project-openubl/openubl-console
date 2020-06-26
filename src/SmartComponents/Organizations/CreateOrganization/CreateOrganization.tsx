@@ -107,7 +107,7 @@ export const CreateOrganization: React.FC<Props> = ({
       name: formData.name || "",
       description: formData.description || "",
       type: "",
-      useMasterKeys: false,
+      useCustomCertificates: true,
       settings: {
         ruc: formData.legalEntityInfo?.ruc || "",
         razonSocial: formData.legalEntityInfo?.razonSocial || "",

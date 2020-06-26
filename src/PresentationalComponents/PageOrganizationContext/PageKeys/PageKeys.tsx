@@ -1,6 +1,5 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import { PageActiveKey } from "./PageActiveKey";
 import { KeyList } from "./PageKeyList";
 import { PageCreateKey } from "./PageCreateKey";
 import { OrganizationContextPageSection } from "../OrganizationContextPageSection";
@@ -20,20 +19,18 @@ export const PageKeys: React.FC<PageKeysProps> = ({ history: { push } }) => {
     <React.Fragment>
       <OrganizationContextPageSection onSelect={onOrganizationContextChange} />
       <Switch>
-        <Route path="/server/org/:organizationId/keys" component={KeyList} />
         <Route
-          path="/server/org/:organizationId/keys/~new"
+          path="/server/org/:organizationId/keys"
+          component={KeyList}
+          exact
+        />
+        <Route
+          path="/server/org/:organizationId/keys/~new/:providerId"
           component={PageCreateKey}
         />
         <Route
-          path="/server/org/:organizationId/keys/~active"
-          component={PageActiveKey}
-          exact
-        />
-        <Route
-          path="/server/org/:organizationId/keys/:keyId"
-          component={PageActiveKey}
-          exact
+          path="/server/org/:organizationId/keys/:keyId/:providerId"
+          component={PageCreateKey}
         />
       </Switch>
     </React.Fragment>

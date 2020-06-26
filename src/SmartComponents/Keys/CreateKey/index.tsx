@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { KeyList } from "./KeyList";
+import { CreateKey } from "./CreateKey";
 import { createMapStateToProps } from "../../../store/common";
 import {
   organizationActions,
@@ -71,5 +71,5 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(KeyList)
+  connect(mapStateToProps, mapDispatchToProps)(CreateKey)
 );

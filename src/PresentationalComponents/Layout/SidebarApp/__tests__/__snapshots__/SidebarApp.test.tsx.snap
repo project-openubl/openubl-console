@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Test snapshot 1`] = `
-<Component
+<PageSidebar
   nav={
     <Nav
       aria-label="Nav"
@@ -10,29 +10,38 @@ exports[`Test snapshot 1`] = `
       onToggle={[Function]}
       theme="dark"
     >
-      <NavList
-        ariaLeftScroll="Scroll left"
-        ariaRightScroll="Scroll right"
+      <NavGroup
+        title="General"
       >
-        <Unknown>
+        <NavItem>
           <ForwardRef
             activeClassName="pf-m-current"
-            to="/"
+            to="/organizations"
           >
-            Menu1
+            Organizaciones
           </ForwardRef>
-        </Unknown>
-        <Unknown
-          itemId={0}
-        >
-          <ForwardRef
+        </NavItem>
+        <NavItem>
+          <UNDEFINED
             activeClassName="pf-m-current"
-            to="/menu2"
+            to="/server/org/:organizationId/keys"
           >
-            Menu2
-          </ForwardRef>
-        </Unknown>
-      </NavList>
+            Certificados
+          </UNDEFINED>
+        </NavItem>
+      </NavGroup>
+      <NavGroup
+        title="Aplicación"
+      >
+        <NavItem>
+          <UNDEFINED
+            activeClassName="pf-m-current"
+            to="/server/org/:organizationId/documents"
+          >
+            Documentos
+          </UNDEFINED>
+        </NavItem>
+      </NavGroup>
     </Nav>
   }
   theme="dark"

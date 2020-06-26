@@ -1,0 +1,27 @@
+import { AxiosError, AxiosResponse } from "axios";
+import { Dispatch } from "redux";
+import { createAction } from "typesafe-actions";
+import { ServerInfoRepresentation } from "../../models/api";
+import { getServerInfo } from "../../api/api";
+
+export const fetchServerInfoRequest = createAction("serverInfoFetch/request")();
+export const fetchServerInfoSuccess = createAction("serverInfoFetch/success")<
+  ServerInfoRepresentation
+>();
+export const fetchServerInfoFailure = createAction("serverInfoFetch/failure")<
+  AxiosError
+>();
+
+export const fetchServerInfo = () => {
+  return (dispatch: Dispatch) => {
+    dispatch(fetchServerInfoRequest());
+
+    return getServerInfo()
+      .then((res: AxiosResponse<ServerInfoRepresentation>) => {
+        dispatch(fetchServerInfoSuccess(res.data));
+      })
+      .catch((err: AxiosError) => {
+        dispatch(fetchServerInfoFailure(err));
+      });
+  };
+};
