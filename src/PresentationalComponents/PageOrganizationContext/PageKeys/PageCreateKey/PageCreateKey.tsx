@@ -6,12 +6,13 @@ import {
   Text,
 } from "@patternfly/react-core";
 import CreateKey from "../../../../SmartComponents/Keys/CreateKey";
+import { AppRouterProps } from "../../../../models/routerProps";
 
-export interface PageCreateKeyProps {
-  organizationId: string;
-}
+export interface PageCreateKeyProps extends AppRouterProps {}
 
-export const PageCreateKey: React.FC<PageCreateKeyProps> = () => {
+export const PageCreateKey: React.FC<PageCreateKeyProps> = ({
+  match: { params },
+}) => {
   return (
     <React.Fragment>
       <PageSection variant={PageSectionVariants.light}>
@@ -20,7 +21,10 @@ export const PageCreateKey: React.FC<PageCreateKeyProps> = () => {
         </TextContent>
       </PageSection>
       <PageSection>
-        <CreateKey />
+        <CreateKey
+          organizationId={params.organizationId}
+          providerId={params.providerId}
+        />
       </PageSection>
     </React.Fragment>
   );

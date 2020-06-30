@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { KeyList } from "./PageKeyList";
 import { PageCreateKey } from "./PageCreateKey";
+import { PageEditKey } from "./PageEditKey/PageEditKey";
 import { OrganizationContextPageSection } from "../OrganizationContextPageSection";
 import { OrganizationRepresentation } from "../../../models/api";
 import { AppRouterProps } from "../../../models/routerProps";
@@ -30,7 +31,7 @@ export const PageKeys: React.FC<PageKeysProps> = ({ history: { push } }) => {
         />
         <Route
           path="/server/org/:organizationId/keys/:keyId/:providerId"
-          component={PageCreateKey}
+          component={PageEditKey}
         />
       </Switch>
     </React.Fragment>

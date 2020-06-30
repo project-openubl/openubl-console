@@ -19,6 +19,8 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
+  GridItem,
+  Grid,
 } from "@patternfly/react-core";
 import {
   Table,
@@ -27,6 +29,7 @@ import {
   TableBody,
   ICell,
   expandable,
+  IActions,
 } from "@patternfly/react-table";
 import { StarIcon, BoxOpenIcon, CaretDownIcon } from "@patternfly/react-icons";
 import { global_palette_gold_200 as globalPaletteGold200 } from "@patternfly/react-tokens";
@@ -39,6 +42,8 @@ import {
   ComponentTypeRepresentation,
 } from "../../../models/api";
 import { FetchStatus } from "../../../store/common";
+import { getMapKeys, getMapValues } from "../../../utils/utils";
+import { deleteDialogActions } from "../../../store/deleteDialog";
 import { AppRouterProps } from "../../../models/routerProps";
 
 interface StateToProps {
@@ -64,7 +69,13 @@ interface DispatchToProps {
   ) => void;
   fetchOrganizationKeys: (organizationId: string) => void;
   fetchOrganizationComponents: (organizationId: string) => void;
+  requestDeleteComponent: (
+    organizationId: string,
+    componentId: string
+  ) => Promise<void>;
   fetchServerInfo: () => void;
+  showDeleteDialog: typeof deleteDialogActions.openModal;
+  closeDeleteDialog: typeof deleteDialogActions.closeModal;
 }
 
 interface KeyListProps extends StateToProps, DispatchToProps, AppRouterProps {
@@ -77,15 +88,17 @@ export const KeyList: React.FC<KeyListProps> = ({
   organizationKeys,
   organizationComponents,
   serverInfo,
-  match,
   fetchOrganization,
   updateOrganization,
   fetchOrganizationKeys,
   fetchOrganizationComponents,
+  requestDeleteComponent,
   fetchServerInfo,
+  showDeleteDialog,
+  closeDeleteDialog,
+  history,
 }) => {
   const [isSwitchChecked, setIsSwitchChecked] = useState<boolean>();
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>();
 
   // [providerId, Component]
   const [componentsMap, setComponentsMap] = useState<
@@ -110,6 +123,7 @@ export const KeyList: React.FC<KeyListProps> = ({
     fetchOrganizationKeys,
     fetchOrganizationComponents,
   ]);
+
   useEffect(() => {
     fetchServerInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,7 +163,7 @@ export const KeyList: React.FC<KeyListProps> = ({
     }
   }, [organizationKeys]);
 
-  const handleChange = (checked: boolean) => {
+  const handleSwitchChange = (checked: boolean) => {
     const data = {
       useCustomCertificates: checked,
     } as OrganizationRepresentation;
@@ -158,16 +172,22 @@ export const KeyList: React.FC<KeyListProps> = ({
     setIsSwitchChecked(checked);
   };
 
-  const getKeys = (map: Map<any, any>) => {
-    const keys: any[] = [];
-    map.forEach((value: any, key: any) => keys.push(key));
-    return keys;
-  };
+  const handleComponentDelete = (component: ComponentRepresentation) => {
+    showDeleteDialog({
+      name: component.name,
+      type: "component",
+      onDelete: () => {
+        requestDeleteComponent(organizationId, component.id).then(() => {
+          closeDeleteDialog();
 
-  const getValues = (map: Map<any, any>) => {
-    const values: any[] = [];
-    map.forEach((value: any) => values.push(value));
-    return values;
+          fetchOrganizationKeys(organizationId);
+          fetchOrganizationComponents(organizationId);
+        });
+      },
+      onCancel: () => {
+        closeDeleteDialog();
+      },
+    });
   };
 
   return (
@@ -175,42 +195,7 @@ export const KeyList: React.FC<KeyListProps> = ({
       <StackItem>
         <Card>
           <CardBody>
-            <Level>
-              <LevelItem>
-                {serverInfo && (
-                  <Dropdown
-                    onSelect={() => {
-                      setIsDropdownOpen(!isDropdownOpen);
-                    }}
-                    toggle={
-                      <DropdownToggle
-                        onToggle={(isOpen: boolean) => {
-                          setIsDropdownOpen(isOpen);
-                        }}
-                        toggleIndicator={CaretDownIcon}
-                        isPrimary={isSwitchChecked}
-                        isDisabled={!isSwitchChecked}
-                      >
-                        Crear certificado
-                      </DropdownToggle>
-                    }
-                    isOpen={isDropdownOpen}
-                    dropdownItems={serverInfo.componentTypes.keyProviders
-                      .sort((a, b) => a.id.localeCompare(b.id))
-                      .map((provider: ComponentTypeRepresentation) => (
-                        <DropdownItem
-                          key={provider.id}
-                          isDisabled={!isSwitchChecked}
-                          component={
-                            <Link to={`${match.url}/~new/${provider.id}`}>
-                              {provider.id}
-                            </Link>
-                          }
-                        ></DropdownItem>
-                      ))}
-                  />
-                )}
-              </LevelItem>
+            <Level hasGutter>
               <LevelItem>
                 {organization && (
                   <Switch
@@ -218,7 +203,16 @@ export const KeyList: React.FC<KeyListProps> = ({
                     label="Usar mis propios certificados"
                     labelOff="Usar los certificados de 'master'"
                     isChecked={isSwitchChecked}
-                    onChange={handleChange}
+                    onChange={handleSwitchChange}
+                  />
+                )}
+              </LevelItem>
+              <LevelItem>
+                {serverInfo && (
+                  <KeyDropdown
+                    organizationId={organizationId}
+                    keyProviders={serverInfo.componentTypes.keyProviders}
+                    isDisabled={!isSwitchChecked}
                   />
                 )}
               </LevelItem>
@@ -232,51 +226,79 @@ export const KeyList: React.FC<KeyListProps> = ({
         componentsMap &&
         keysMap &&
         componentsMap.size === keysMap.size &&
-        getKeys(componentsMap).every((providerId: string) =>
+        getMapKeys(componentsMap).every((providerId: string) =>
           keysMap.get(providerId)
         ) && (
           <React.Fragment>
             <StackItem>
-              <Card>
-                <CardHeader>
-                  <span>
-                    <i>
-                      <StarIcon color={globalPaletteGold200.value} />
-                    </i>
-                    &nbsp;Certificado en uso
-                  </span>
-                </CardHeader>
-                <CardBody>
-                  {getValues(activeKeys).map(
-                    (providerId: string, index: number) => {
-                      const component = componentsMap.get(providerId)!;
-                      const key = keysMap.get(providerId)!;
-                      return (
+              <Grid hasGutter>
+                <GridItem sm={12} md={4}>
+                  <Card>
+                    <CardHeader>
+                      <span>
+                        <i>
+                          <StarIcon color={globalPaletteGold200.value} />
+                        </i>
+                        &nbsp;Certificado en uso
+                      </span>
+                    </CardHeader>
+                    <CardBody>
+                      {getMapValues(activeKeys).map(
+                        (providerId: string, index: number) => {
+                          const component = componentsMap.get(providerId)!;
+                          const key = keysMap.get(providerId)!;
+                          return (
+                            <div key={index} className="pf-c-content">
+                              <dl>
+                                <dt>Proveedor</dt>
+                                <dd>
+                                  <Link
+                                    to={`/server/org/${organizationId}/keys/${component.id}/${component.providerId}`}
+                                  >
+                                    {component.name}
+                                  </Link>
+                                </dd>
+                                <dt>Tipo</dt>
+                                <dd>{key.type}</dd>
+                                <dt>Prioridad</dt>
+                                <dd>{key.providerPriority}</dd>
+                                <dt>Llave pública</dt>
+                                <dd>
+                                  <ClipboardCopy>{key.publicKey}</ClipboardCopy>
+                                </dd>
+                                <dt>Certificado</dt>
+                                <dd>
+                                  <ClipboardCopy>
+                                    {key.certificate}
+                                  </ClipboardCopy>
+                                </dd>
+                              </dl>
+                            </div>
+                          );
+                        }
+                      )}
+                    </CardBody>
+                  </Card>
+                </GridItem>
+                <GridItem sm={12} md={8}>
+                  <Card>
+                    <CardHeader>Todos los certificados</CardHeader>
+                    <CardBody>
+                      {getMapKeys(componentsMap).every((providerId: string) =>
+                        keysMap.get(providerId)
+                      ) && (
                         <KeyTable
-                          key={index}
-                          components={[component]}
-                          keys={[key]}
+                          history={history}
+                          organizationId={organizationId}
+                          components={getMapValues(componentsMap)}
+                          keys={getMapValues(keysMap)}
+                          onDelete={handleComponentDelete}
                         />
-                      );
-                    }
-                  )}
-                </CardBody>
-              </Card>
-            </StackItem>
-            <StackItem>
-              <Card>
-                <CardHeader>Todos los certificados</CardHeader>
-                <CardBody>
-                  {getKeys(componentsMap).every((providerId: string) =>
-                    keysMap.get(providerId)
-                  ) && (
-                    <KeyTable
-                      components={getValues(componentsMap)}
-                      keys={getValues(keysMap)}
-                    />
-                  )}
-                </CardBody>
-              </Card>
+                      )}
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              </Grid>
             </StackItem>
           </React.Fragment>
         )}
@@ -303,20 +325,95 @@ export const KeyList: React.FC<KeyListProps> = ({
   );
 };
 
-export interface KeyTableProps {
-  components: ComponentRepresentation[];
-  keys: KeyMetadataRepresentation[];
+interface keyDropDownProps {
+  organizationId: string;
+  keyProviders: ComponentTypeRepresentation[];
+  isDisabled: boolean;
 }
 
-export const KeyTable: React.FC<KeyTableProps> = ({ components, keys }) => {
+export const KeyDropdown: React.FC<keyDropDownProps> = ({
+  keyProviders,
+  isDisabled,
+  organizationId,
+}) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>();
+
+  return (
+    <Dropdown
+      onSelect={() => {
+        setIsDropdownOpen(!isDropdownOpen);
+      }}
+      toggle={
+        <DropdownToggle
+          onToggle={(isOpen: boolean) => {
+            setIsDropdownOpen(isOpen);
+          }}
+          toggleIndicator={CaretDownIcon}
+          isPrimary={!isDisabled}
+          isDisabled={isDisabled}
+        >
+          Crear certificado
+        </DropdownToggle>
+      }
+      isOpen={isDropdownOpen}
+      dropdownItems={keyProviders
+        .sort((a, b) => a.id.localeCompare(b.id))
+        .map((provider: ComponentTypeRepresentation) => (
+          <DropdownItem
+            key={provider.id}
+            component={
+              <Link
+                to={`/server/org/${organizationId}/keys/~new/${provider.id}`}
+              >
+                {provider.id}
+              </Link>
+            }
+          ></DropdownItem>
+        ))}
+    />
+  );
+};
+
+interface KeyTableProps {
+  organizationId: string;
+  components: ComponentRepresentation[];
+  keys: KeyMetadataRepresentation[];
+  history: any;
+  onDelete: (component: ComponentRepresentation) => void;
+}
+
+export const KeyTable: React.FC<KeyTableProps> = ({
+  organizationId,
+  components,
+  keys,
+  history,
+  onDelete,
+}) => {
   const columns: (ICell | string)[] = [
-    { title: "Estatus", transforms: [], cellFormatters: [expandable] },
-    { title: "Proveedor", transforms: [] },
+    { title: "Proveedor", transforms: [], cellFormatters: [expandable] },
     { title: "Tipo", transforms: [] },
     { title: "Prioridad", transforms: [] },
   ];
 
   const [rows, setRows] = useState<IRow[]>([]);
+
+  const actions: IActions = [
+    {
+      title: "Edit",
+      onClick: (_, rowId) =>
+        history.push(
+          `/server/org/${organizationId}/keys/${components[rowId].id}/${components[rowId].providerId}`
+        ),
+    },
+    {
+      title: "Delete",
+      onClick: (_, rowId) => {
+        console.log(components);
+        console.log(rowId);
+        onDelete(components[rowId / 2]);
+      },
+    },
+  ];
 
   useEffect(() => {
     if (components && keys && components.length === keys.length) {
@@ -330,10 +427,13 @@ export const KeyTable: React.FC<KeyTableProps> = ({ components, keys }) => {
             isOpen: false,
             cells: [
               {
-                title: key.status,
-              },
-              {
-                title: component.name,
+                title: (
+                  <Link
+                    to={`/server/org/${organizationId}/keys/${component.id}/${component.providerId}`}
+                  >
+                    {component.name}
+                  </Link>
+                ),
               },
               {
                 title: key.type,
@@ -371,7 +471,7 @@ export const KeyTable: React.FC<KeyTableProps> = ({ components, keys }) => {
       }
       setRows(rows);
     }
-  }, [components, keys, setRows]);
+  }, [organizationId, components, keys, setRows]);
 
   const handleOnTableCollapse = (
     _event: any,
@@ -388,6 +488,7 @@ export const KeyTable: React.FC<KeyTableProps> = ({ components, keys }) => {
       aria-label="Keys List Table"
       cells={columns}
       rows={rows}
+      actions={actions}
       onCollapse={handleOnTableCollapse}
     >
       <TableHeader />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { Card, CardBody, GridItem, Grid } from "@patternfly/react-core";
+import { GridItem, Grid } from "@patternfly/react-core";
 import {
   ServerInfoRepresentation,
   ComponentTypeRepresentation,
@@ -14,28 +14,36 @@ interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;
   serverInfoFetchStatus: FetchStatus | undefined;
   serverInfoError: AxiosError | undefined;
+  component: ComponentRepresentation | undefined;
+  componentFetchStatus: FetchStatus | undefined;
+  componentError: AxiosError | undefined;
 }
 
 interface DispatchToProps {
   fetchServerInfo: () => void;
-  requestCreateComponent: (
+  fetchComponent: (organizationId: string, componentId: string) => void;
+  updateComponent: (
     organizationId: string,
     component: ComponentRepresentation
-  ) => Promise<void>;
+  ) => void;
 }
 
-interface KeyListProps extends StateToProps, DispatchToProps, AppRouterProps {
+interface EditKeyProps extends StateToProps, DispatchToProps, AppRouterProps {
   organizationId: string;
+  keyId: string;
   providerId: string;
 }
 
-export const CreateKey: React.FC<KeyListProps> = ({
+export const EditKey: React.FC<EditKeyProps> = ({
   organizationId,
+  keyId,
   providerId,
   serverInfo,
+  component,
   history: { push },
   fetchServerInfo,
-  requestCreateComponent,
+  fetchComponent,
+  updateComponent,
 }) => {
   const [componentType, setComponentType] = useState<
     ComponentTypeRepresentation
@@ -57,24 +65,27 @@ export const CreateKey: React.FC<KeyListProps> = ({
     }
   }, [providerId, serverInfo]);
 
-  const onSubmit = async (values: any) => {
-    const { name, ...restValues } = values;
-    const payload: any = {
-      name,
-      parentId: organizationId,
-      providerId: providerId,
-      providerType: "io.github.project.openubl.keys.KeyProvider",
-      config: Object.keys(restValues).reduce(
-        (accumulator: any, currentKey: string) => {
-          accumulator[currentKey] = [restValues[currentKey].toString()];
-          return accumulator;
-        },
-        {} as any
-      ),
-    };
+  useEffect(() => {
+    fetchComponent(organizationId, keyId);
+  }, [organizationId, keyId, fetchComponent]);
 
-    await requestCreateComponent(organizationId, payload);
-    push(`/server/org/${organizationId}/keys`);
+  const onSubmit = async (values: any) => {
+    // const { name, ...restValues } = values;
+    // const payload: any = {
+    //   name,
+    //   parentId: organizationId,
+    //   providerId: providerId,
+    //   providerType: "io.github.project.openubl.keys.KeyProvider",
+    //   config: Object.keys(restValues).reduce(
+    //     (accumulator: any, currentKey: string) => {
+    //       accumulator[currentKey] = [restValues[currentKey].toString()];
+    //       return accumulator;
+    //     },
+    //     {} as any
+    //   ),
+    // };
+    // await requestCreateComponent(organizationId, payload);
+    // push(`/server/org/${organizationId}/keys`);
   };
 
   const onCancel = () => {
@@ -84,17 +95,14 @@ export const CreateKey: React.FC<KeyListProps> = ({
   return (
     <Grid hasGutter lg={6}>
       <GridItem>
-        <Card>
-          <CardBody>
-            {componentType && (
-              <KeyForm
-                componentType={componentType}
-                onSubmit={onSubmit}
-                onCancel={onCancel}
-              />
-            )}
-          </CardBody>
-        </Card>
+        {componentType && component && (
+          <KeyForm
+            componentType={componentType}
+            component={component}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+          />
+        )}
       </GridItem>
     </Grid>
   );

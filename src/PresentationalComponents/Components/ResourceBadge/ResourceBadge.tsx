@@ -15,12 +15,19 @@ const resources: Map<string, Resource> = new Map([
       name: "Organization",
     },
   ],
+  [
+    "component",
+    {
+      abbr: "CO",
+      name: "Component",
+    },
+  ],
 ]);
 
 export interface ResourceBadgeProps {
   resourceId: string;
-  resourceType: "organization";
-  isActive: boolean;
+  resourceType: "organization" | "component";
+  isActive?: boolean;
 }
 
 export const ResourceBadge: React.FC<ResourceBadgeProps> = ({
@@ -35,9 +42,11 @@ export const ResourceBadge: React.FC<ResourceBadgeProps> = ({
           <Label color="grey">{resources.get(resourceType)?.abbr}</Label>
         </Tooltip>
         <span>&nbsp;{resourceId}&nbsp;</span>
-        <Label color={isActive ? "green" : "red"} icon={<CheckCircleIcon />}>
-          {isActive ? "Active" : "Inactive"}
-        </Label>
+        {isActive && (
+          <Label color={isActive ? "green" : "red"} icon={<CheckCircleIcon />}>
+            {isActive ? "Active" : "Inactive"}
+          </Label>
+        )}
       </Text>
     </TextContent>
   );

@@ -6,6 +6,8 @@
   "homepage": "./",
   "proxy": "http://localhost:8080",
   "dependencies": {
+    "@data-driven-forms/pf4-component-mapper": "^2.6.1",
+    "@data-driven-forms/react-form-renderer": "^2.6.1",
     "@patternfly/react-core": "4.22.0",
     "@patternfly/react-table": "4.8.1",
     "@redhat-cloud-services/frontend-components-notifications": "^2.0.3",
