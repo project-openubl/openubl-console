@@ -4,7 +4,7 @@ import { OrganizationRepresentation } from "../../../models/api";
 
 interface StateToProps {
   contextOrganization: OrganizationRepresentation | undefined;
-  contextOrganizations: OrganizationRepresentation[];
+  contextOrganizations: OrganizationRepresentation[] | undefined;
 }
 
 interface DispatchToProps {}
@@ -30,8 +30,8 @@ export const OrganizationContextNavLink: React.FC<OrganizationContextNavLinkProp
         ":organizationId",
         contextOrganization
           ? contextOrganization.id
-          : contextOrganizations.length > 0
-          ? contextOrganizations[0].id
+          : (contextOrganizations || []).length > 0
+          ? (contextOrganizations || [])[0].id
           : "master"
       )}
       activeClassName={activeClassName}

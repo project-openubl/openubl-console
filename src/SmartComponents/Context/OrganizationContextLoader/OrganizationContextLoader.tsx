@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
+import { AxiosError } from "axios";
 import { OrganizationRepresentation } from "../../../models/api";
+import { FetchStatus } from "../../../store/common";
+import { FetchManager } from "../../../PresentationalComponents/Components/FetchManager";
 
 interface StateToProps {
   ctxOrganizations: OrganizationRepresentation[] | undefined;
+  ctxOrganizationsError: AxiosError | undefined;
+  ctxOrganizationsFetchStatus: FetchStatus;
 }
 
 interface DispatchToProps {
-  fetchOrganizations: () => void;
+  fetchCtxOrganizations: () => void;
 }
 
 interface OrganizationContextRouteProps extends StateToProps, DispatchToProps {
@@ -15,13 +20,21 @@ interface OrganizationContextRouteProps extends StateToProps, DispatchToProps {
 
 export const OrganizationContextLoader: React.FC<OrganizationContextRouteProps> = ({
   children,
-  ctxOrganizations,
-  fetchOrganizations,
+  ctxOrganizationsError,
+  ctxOrganizationsFetchStatus,
+  fetchCtxOrganizations,
 }) => {
   useEffect(() => {
-    fetchOrganizations();
+    fetchCtxOrganizations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <React.Fragment>{ctxOrganizations ? children : ""}</React.Fragment>;
+  return (
+    <FetchManager
+      error={ctxOrganizationsError}
+      fetchStatus={ctxOrganizationsFetchStatus}
+    >
+      {children}
+    </FetchManager>
+  );
 };

@@ -4,11 +4,7 @@ import { stateKey } from "./reducer";
 export const organizationsState = (state: RootState) => state[stateKey];
 
 export const organizations = (state: RootState) => {
-  const srcs = organizationsState(state).organizations;
-  if (srcs) {
-    return srcs;
-  }
-  return [];
+  return organizationsState(state).organizations;
 };
 
 export const status = (state: RootState) => organizationsState(state).status;

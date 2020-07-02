@@ -10,7 +10,7 @@
     "@data-driven-forms/react-form-renderer": "^2.6.1",
     "@patternfly/react-core": "4.22.0",
     "@patternfly/react-table": "4.8.1",
-    "@redhat-cloud-services/frontend-components-notifications": "^2.0.3",
+    "@redhat-cloud-services/frontend-components-notifications": "2.1.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
