@@ -19,7 +19,10 @@ export const OrganizationContextPageSection: React.FC<OrganizationContextPageSec
   return (
     <PageSection variant={PageSectionVariants.light} style={{ padding: 0 }}>
       <Stack>
-        <StackItem className="pf-c-page__main-section">
+        <StackItem
+          className="pf-c-page__main-section"
+          style={{ paddingTop: 10, paddingBottom: 10 }}
+        >
           <OrganizationContextSelector onSelect={onSelect} />
         </StackItem>
         <StackItem>

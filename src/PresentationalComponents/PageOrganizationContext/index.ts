@@ -1,1 +1,1 @@
-export { PageOrganizationContext } from "./PageOrganizationContext";
+export { PageOrganizationContext as default } from "./PageOrganizationContext";

@@ -1,1 +1,1 @@
-export { PageOrganizations } from "./PageOrganizations";
+export { PageOrganizations as default } from "./PageOrganizations";
