@@ -2,11 +2,12 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, PageSidebar, NavGroup } from "@patternfly/react-core";
 import OrganizationContextNavLink from "../../../SmartComponents/Context/OrganizationContextNavLink";
+import { LayoutTheme } from "../LayoutUtils";
 
 export const SidebarApp: React.FC = () => {
   const renderPageNav = () => {
     return (
-      <Nav id="nav-primary-simple" aria-label="Nav" theme="dark">
+      <Nav id="nav-primary-simple" aria-label="Nav" theme={LayoutTheme}>
         <NavGroup title="General">
           <NavItem>
             <NavLink to="/organizations" activeClassName="pf-m-current">
@@ -36,5 +37,5 @@ export const SidebarApp: React.FC = () => {
     );
   };
 
-  return <PageSidebar nav={renderPageNav()} theme="dark" />;
+  return <PageSidebar nav={renderPageNav()} theme={LayoutTheme} />;
 };

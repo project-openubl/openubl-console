@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AxiosError } from "axios";
 import {
   Stack,
   StackItem,
   Card,
   CardBody,
-  CardHeader,
   Switch,
   ClipboardCopy,
   Level,
@@ -19,8 +17,9 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
-  GridItem,
-  Grid,
+  Tabs,
+  Tab,
+  TabTitleText,
 } from "@patternfly/react-core";
 import {
   Table,
@@ -31,8 +30,7 @@ import {
   expandable,
   IActions,
 } from "@patternfly/react-table";
-import { StarIcon, BoxOpenIcon, CaretDownIcon } from "@patternfly/react-icons";
-import { global_palette_gold_200 as globalPaletteGold200 } from "@patternfly/react-tokens";
+import { BoxOpenIcon, CaretDownIcon } from "@patternfly/react-icons";
 import {
   OrganizationRepresentation,
   KeysMetadataRepresentation,
@@ -41,24 +39,16 @@ import {
   ServerInfoRepresentation,
   ComponentTypeRepresentation,
 } from "../../../models/api";
-import { FetchStatus } from "../../../store/common";
+import { ObjectData } from "../../../store/common";
 import { getMapKeys, getMapValues } from "../../../utils/utils";
 import { deleteDialogActions } from "../../../store/deleteDialog";
 import { AppRouterProps } from "../../../models/routerProps";
 
 interface StateToProps {
-  organization: OrganizationRepresentation | undefined;
-  organizationError: AxiosError | undefined;
-  organizationFetchStatus: FetchStatus | undefined;
-  organizationKeys: KeysMetadataRepresentation | undefined;
-  organizationKeysFetchStatus: FetchStatus | undefined;
-  organizationKeysError: AxiosError | undefined;
-  organizationComponents: ComponentRepresentation[] | undefined;
-  organizationComponentsFetchStatus: FetchStatus | undefined;
-  organizationComponentsError: AxiosError | undefined;
-  serverInfo: ServerInfoRepresentation | undefined;
-  serverInfoFetchStatus: FetchStatus | undefined;
-  serverInfoError: AxiosError | undefined;
+  organization: ObjectData<OrganizationRepresentation>;
+  keys: ObjectData<KeysMetadataRepresentation>;
+  components: ObjectData<ComponentRepresentation[]>;
+  serverInfo: ObjectData<ServerInfoRepresentation>;
 }
 
 interface DispatchToProps {
@@ -66,63 +56,66 @@ interface DispatchToProps {
   updateOrganization: (
     organizationId: string,
     organization: OrganizationRepresentation
-  ) => void;
-  fetchOrganizationKeys: (organizationId: string) => void;
-  fetchOrganizationComponents: (organizationId: string) => void;
-  requestDeleteComponent: (
+  ) => Promise<void>;
+  fetchKeys: (organizationId: string) => Promise<void>;
+  fetchComponents: (organizationId: string) => Promise<void>;
+  deleteComponent: (
     organizationId: string,
     componentId: string
   ) => Promise<void>;
-  fetchServerInfo: () => void;
+  fetchServerInfo: () => Promise<void>;
   showDeleteDialog: typeof deleteDialogActions.openModal;
   closeDeleteDialog: typeof deleteDialogActions.closeModal;
+  processingDeleteDialog: typeof deleteDialogActions.processing;
 }
 
-interface KeyListProps extends StateToProps, DispatchToProps, AppRouterProps {
+export interface KeyListOwnProps {
   organizationId: string;
 }
 
+export interface KeyListProps
+  extends StateToProps,
+    DispatchToProps,
+    KeyListOwnProps,
+    AppRouterProps {}
+
 export const KeyList: React.FC<KeyListProps> = ({
   organizationId,
-  organization,
-  organizationKeys,
-  organizationComponents,
-  serverInfo,
+  organization: { data: organizationData },
+  keys: { data: keysData },
+  components: { data: componentsData },
+  serverInfo: { data: serverInfoData },
   fetchOrganization,
   updateOrganization,
-  fetchOrganizationKeys,
-  fetchOrganizationComponents,
-  requestDeleteComponent,
+  fetchKeys,
+  fetchComponents,
+  deleteComponent,
   fetchServerInfo,
   showDeleteDialog,
   closeDeleteDialog,
+  processingDeleteDialog,
   history,
 }) => {
   const [isSwitchChecked, setIsSwitchChecked] = useState<boolean>();
 
   // [providerId, Component]
-  const [componentsMap, setComponentsMap] = useState<
+  const [componentMap, setComponentMap] = useState<
     Map<string, ComponentRepresentation>
   >();
 
   // [providerId, Key]
-  const [keysMap, setKeysMap] = useState<
+  const [keyMetadataMap, setKeyMetadataMap] = useState<
     Map<string, KeyMetadataRepresentation>
   >();
 
   // [Type,providerId] E.g. [{RS256: 'id'}]
-  const [activeKeys, setActiveKeys] = useState<Map<string, string>>();
+  const [activeKeyMap, setActiveKeyMap] = useState<Map<string, string>>();
 
   useEffect(() => {
     fetchOrganization(organizationId);
-    fetchOrganizationKeys(organizationId);
-    fetchOrganizationComponents(organizationId);
-  }, [
-    organizationId,
-    fetchOrganization,
-    fetchOrganizationKeys,
-    fetchOrganizationComponents,
-  ]);
+    fetchKeys(organizationId);
+    fetchComponents(organizationId);
+  }, [organizationId, fetchOrganization, fetchKeys, fetchComponents]);
 
   useEffect(() => {
     fetchServerInfo();
@@ -130,38 +123,34 @@ export const KeyList: React.FC<KeyListProps> = ({
   }, []);
 
   useEffect(() => {
-    setIsSwitchChecked(organization?.useCustomCertificates);
-  }, [organization]);
+    setIsSwitchChecked(organizationData?.useCustomCertificates);
+  }, [organizationData]);
 
   useEffect(() => {
-    if (organizationComponents) {
+    if (componentsData) {
       const components: Map<string, ComponentRepresentation> = new Map();
-      organizationComponents.forEach((e) => {
-        components.set(e.id, e);
-      });
-      setComponentsMap(components);
+      componentsData.forEach((c) => components.set(c.id, c));
+      setComponentMap(components);
     }
-  }, [organizationComponents]);
+  }, [componentsData]);
 
   useEffect(() => {
-    if (organizationKeys) {
-      const keys: Map<string, KeyMetadataRepresentation> = new Map();
-      organizationKeys.keys.forEach((e) => {
-        keys.set(e.providerId, e);
-      });
-      setKeysMap(keys);
+    if (keysData) {
+      const keysMedatadata: Map<string, KeyMetadataRepresentation> = new Map();
+      keysData.keys.forEach((e) => keysMedatadata.set(e.providerId, e));
+      setKeyMetadataMap(keysMedatadata);
 
       const activeKeys: Map<string, string> = new Map();
-      for (const k in organizationKeys.active) {
-        if (organizationKeys.active[k]) {
-          const kid = organizationKeys.active[k];
-          const key = organizationKeys.keys.find((e) => e.kid === kid);
+      for (const k in keysData.active) {
+        if (keysData.active[k]) {
+          const kid = keysData.active[k];
+          const key = keysData.keys.find((e) => e.kid === kid);
           activeKeys.set(k, key!.providerId);
         }
       }
-      setActiveKeys(activeKeys);
+      setActiveKeyMap(activeKeys);
     }
-  }, [organizationKeys]);
+  }, [keysData]);
 
   const handleSwitchChange = (checked: boolean) => {
     const data = {
@@ -177,11 +166,13 @@ export const KeyList: React.FC<KeyListProps> = ({
       name: component.name,
       type: "component",
       onDelete: () => {
-        requestDeleteComponent(organizationId, component.id).then(() => {
+        processingDeleteDialog();
+        deleteComponent(organizationId, component.id).then(() => {
           closeDeleteDialog();
 
-          fetchOrganizationKeys(organizationId);
-          fetchOrganizationComponents(organizationId);
+          // Fetch keys and components again
+          fetchKeys(organizationId);
+          fetchComponents(organizationId);
         });
       },
       onCancel: () => {
@@ -197,21 +188,25 @@ export const KeyList: React.FC<KeyListProps> = ({
           <CardBody>
             <Level hasGutter>
               <LevelItem>
-                {organization && (
+                {organizationData && (
                   <Switch
                     aria-label="switch"
-                    label="Usar mis propios certificados"
-                    labelOff="Usar los certificados de 'master'"
+                    label="Sign with my keys"
+                    labelOff={
+                      <span>
+                        Sign with <code>master's</code> keys
+                      </span>
+                    }
                     isChecked={isSwitchChecked}
                     onChange={handleSwitchChange}
                   />
                 )}
               </LevelItem>
               <LevelItem>
-                {serverInfo && (
+                {serverInfoData && (
                   <KeyDropdown
                     organizationId={organizationId}
-                    keyProviders={serverInfo.componentTypes.keyProviders}
+                    keyProviders={serverInfoData.componentTypes.keyProviders}
                     isDisabled={!isSwitchChecked}
                   />
                 )}
@@ -220,101 +215,41 @@ export const KeyList: React.FC<KeyListProps> = ({
           </CardBody>
         </Card>
       </StackItem>
-
       {isSwitchChecked &&
-        activeKeys &&
-        componentsMap &&
-        keysMap &&
-        componentsMap.size === keysMap.size &&
-        getMapKeys(componentsMap).every((providerId: string) =>
-          keysMap.get(providerId)
+        activeKeyMap &&
+        componentMap &&
+        keyMetadataMap &&
+        componentMap.size === keyMetadataMap.size &&
+        getMapKeys(componentMap).every((providerId: string) =>
+          keyMetadataMap.get(providerId)
         ) && (
-          <React.Fragment>
-            <StackItem>
-              <Grid hasGutter>
-                <GridItem sm={12} md={4}>
-                  <Card>
-                    <CardHeader>
-                      <span>
-                        <i>
-                          <StarIcon color={globalPaletteGold200.value} />
-                        </i>
-                        &nbsp;Certificado en uso
-                      </span>
-                    </CardHeader>
-                    <CardBody>
-                      {getMapValues(activeKeys).map(
-                        (providerId: string, index: number) => {
-                          const component = componentsMap.get(providerId)!;
-                          const key = keysMap.get(providerId)!;
-                          return (
-                            <div key={index} className="pf-c-content">
-                              <dl>
-                                <dt>Proveedor</dt>
-                                <dd>
-                                  <Link
-                                    to={`/server/org/${organizationId}/keys/${component.id}/${component.providerId}`}
-                                  >
-                                    {component.name}
-                                  </Link>
-                                </dd>
-                                <dt>Tipo</dt>
-                                <dd>{key.type}</dd>
-                                <dt>Prioridad</dt>
-                                <dd>{key.providerPriority}</dd>
-                                <dt>Llave pública</dt>
-                                <dd>
-                                  <ClipboardCopy>{key.publicKey}</ClipboardCopy>
-                                </dd>
-                                <dt>Certificado</dt>
-                                <dd>
-                                  <ClipboardCopy>
-                                    {key.certificate}
-                                  </ClipboardCopy>
-                                </dd>
-                              </dl>
-                            </div>
-                          );
-                        }
-                      )}
-                    </CardBody>
-                  </Card>
-                </GridItem>
-                <GridItem sm={12} md={8}>
-                  <Card>
-                    <CardHeader>Todos los certificados</CardHeader>
-                    <CardBody>
-                      {getMapKeys(componentsMap).every((providerId: string) =>
-                        keysMap.get(providerId)
-                      ) && (
-                        <KeyTable
-                          history={history}
-                          organizationId={organizationId}
-                          components={getMapValues(componentsMap)}
-                          keys={getMapValues(keysMap)}
-                          onDelete={handleComponentDelete}
-                        />
-                      )}
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              </Grid>
-            </StackItem>
-          </React.Fragment>
+          <StackItem>
+            <Card>
+              <CardBody>
+                <KeyTab
+                  organizationId={organizationId}
+                  componentMap={componentMap}
+                  keyMetadataMap={keyMetadataMap}
+                  activeKeyMap={activeKeyMap}
+                  history={history}
+                  onComponentDelete={handleComponentDelete}
+                />
+              </CardBody>
+            </Card>
+          </StackItem>
         )}
-      {!isSwitchChecked && (
+      {isSwitchChecked !== undefined && !isSwitchChecked && (
         <StackItem>
           <Card>
             <CardBody>
               <EmptyState variant={EmptyStateVariant.small}>
                 <EmptyStateIcon icon={BoxOpenIcon} />
                 <Title headingLevel="h4" size="lg">
-                  No hay certificados que mostrar
+                  There is no <code>keys</code> to show
                 </Title>
                 <EmptyStateBody>
-                  Todos los documentos creados en la presente organización serán
-                  firmados usando los certificados digitales de la organización{" "}
-                  <code>master</code>.
+                  All documents will be signed using <code>master</code>'s
+                  keys'.
                 </EmptyStateBody>
               </EmptyState>
             </CardBody>
@@ -352,7 +287,7 @@ export const KeyDropdown: React.FC<keyDropDownProps> = ({
           isPrimary={!isDisabled}
           isDisabled={isDisabled}
         >
-          Crear certificado
+          Create key
         </DropdownToggle>
       }
       isOpen={isDropdownOpen}
@@ -374,10 +309,85 @@ export const KeyDropdown: React.FC<keyDropDownProps> = ({
   );
 };
 
+interface KeyTabProps {
+  organizationId: string;
+  componentMap: Map<string, ComponentRepresentation>;
+  keyMetadataMap: Map<string, KeyMetadataRepresentation>;
+  activeKeyMap: Map<string, string>;
+  history: any;
+  onComponentDelete: (component: ComponentRepresentation) => void;
+}
+
+export const KeyTab: React.FC<KeyTabProps> = ({
+  organizationId,
+  componentMap,
+  keyMetadataMap,
+  activeKeyMap,
+  history,
+  onComponentDelete,
+}) => {
+  const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
+
+  return (
+    <Tabs
+      activeKey={activeTabKey}
+      onSelect={(_, tabIndex: number | string) => {
+        setActiveTabKey(tabIndex);
+      }}
+    >
+      <Tab eventKey={0} title={<TabTitleText>All keys</TabTitleText>}>
+        {getMapKeys(componentMap).every((providerId: string) =>
+          keyMetadataMap.get(providerId)
+        ) && (
+          <KeyTable
+            history={history}
+            organizationId={organizationId}
+            components={componentMap}
+            keys={keyMetadataMap}
+            onDelete={onComponentDelete}
+          />
+        )}
+      </Tab>
+      <Tab eventKey={1} title={<TabTitleText>Active key</TabTitleText>}>
+        {getMapValues(activeKeyMap).map((providerId: string, index: number) => {
+          const component = componentMap.get(providerId)!;
+          const key = keyMetadataMap.get(providerId)!;
+          return (
+            <div key={index} className="pf-c-content">
+              <dl>
+                <dt>Provider</dt>
+                <dd>
+                  <Link
+                    to={`/server/org/${organizationId}/keys/${component.id}/${component.providerId}`}
+                  >
+                    {component.name}
+                  </Link>
+                </dd>
+                <dt>Type</dt>
+                <dd>{key.type}</dd>
+                <dt>Priority</dt>
+                <dd>{key.providerPriority}</dd>
+                <dt>Public key</dt>
+                <dd>
+                  <ClipboardCopy>{key.publicKey}</ClipboardCopy>
+                </dd>
+                <dt>Certificate</dt>
+                <dd>
+                  <ClipboardCopy>{key.certificate}</ClipboardCopy>
+                </dd>
+              </dl>
+            </div>
+          );
+        })}
+      </Tab>
+    </Tabs>
+  );
+};
+
 interface KeyTableProps {
   organizationId: string;
-  components: ComponentRepresentation[];
-  keys: KeyMetadataRepresentation[];
+  components: Map<string, ComponentRepresentation>;
+  keys: Map<string, KeyMetadataRepresentation>;
   history: any;
   onDelete: (component: ComponentRepresentation) => void;
 }
@@ -390,9 +400,9 @@ export const KeyTable: React.FC<KeyTableProps> = ({
   onDelete,
 }) => {
   const columns: (ICell | string)[] = [
-    { title: "Proveedor", transforms: [], cellFormatters: [expandable] },
-    { title: "Tipo", transforms: [] },
-    { title: "Prioridad", transforms: [] },
+    { title: "Provider", transforms: [], cellFormatters: [expandable] },
+    { title: "Type", transforms: [] },
+    { title: "Priority", transforms: [] },
   ];
 
   const [rows, setRows] = useState<IRow[]>([]);
@@ -400,27 +410,30 @@ export const KeyTable: React.FC<KeyTableProps> = ({
   const actions: IActions = [
     {
       title: "Edit",
-      onClick: (_, rowId) =>
+      onClick: (_, rowId) => {
+        const componentArray = getMapValues(components);
         history.push(
-          `/server/org/${organizationId}/keys/${components[rowId].id}/${components[rowId].providerId}`
-        ),
+          `/server/org/${organizationId}/keys/${componentArray[rowId].id}/${componentArray[rowId].providerId}`
+        );
+      },
     },
     {
       title: "Delete",
       onClick: (_, rowId) => {
-        console.log(components);
-        console.log(rowId);
-        onDelete(components[rowId / 2]);
+        const componentArray = getMapValues(components);
+        onDelete(componentArray[rowId / 2]);
       },
     },
   ];
 
   useEffect(() => {
-    if (components && keys && components.length === keys.length) {
+    if (components && keys && components.size === keys.size) {
       const rows: (IRow | string[])[] = [];
-      for (let i = 0; i < components.length; i++) {
-        const component = components[i];
-        const key = keys[i];
+
+      let i = 0;
+      components.forEach((v: ComponentRepresentation, k: string) => {
+        const component = v;
+        const key = keys.get(k);
 
         rows.push(
           {
@@ -436,10 +449,10 @@ export const KeyTable: React.FC<KeyTableProps> = ({
                 ),
               },
               {
-                title: key.type,
+                title: key!.type,
               },
               {
-                title: key.providerPriority,
+                title: key!.providerPriority,
               },
             ],
           },
@@ -452,13 +465,13 @@ export const KeyTable: React.FC<KeyTableProps> = ({
                   <React.Fragment>
                     <div className="pf-c-content">
                       <dl>
-                        <dt>Llave pública</dt>
+                        <dt>Public key</dt>
                         <dd>
-                          <ClipboardCopy>{key.publicKey}</ClipboardCopy>
+                          <ClipboardCopy>{key!.publicKey}</ClipboardCopy>
                         </dd>
-                        <dt>Certificado</dt>
+                        <dt>Certificate</dt>
                         <dd>
-                          <ClipboardCopy>{key.certificate}</ClipboardCopy>
+                          <ClipboardCopy>{key!.certificate}</ClipboardCopy>
                         </dd>
                       </dl>
                     </div>
@@ -468,7 +481,10 @@ export const KeyTable: React.FC<KeyTableProps> = ({
             ],
           }
         );
-      }
+
+        i++;
+      });
+
       setRows(rows);
     }
   }, [organizationId, components, keys, setRows]);

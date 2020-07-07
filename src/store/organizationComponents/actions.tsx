@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
-import { alertFetchEndpoint } from "../alert/actions";
 import { ComponentRepresentation } from "../../models/api";
 import { getOrganizationComponents } from "../../api/api";
 
@@ -33,7 +32,6 @@ export const fetchOrganizationComponents = (organizationId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationComponentsFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

@@ -1,5 +1,7 @@
 import { RootState } from "../rootReducer";
 import { stateKey } from "./reducer";
+import { ObjectData } from "../common";
+import { OrganizationRepresentation } from "../../models/api";
 
 export const organizationState = (state: RootState) => state[stateKey];
 
@@ -17,3 +19,12 @@ export const selectOrganizationError = (
   state: RootState,
   organizationId: string
 ) => organizationState(state).errors.get(organizationId);
+
+export const selectOrganizationData = (
+  state: RootState,
+  organizationId: string
+): ObjectData<OrganizationRepresentation> => ({
+  data: selectOrganization(state, organizationId),
+  error: selectOrganizationError(state, organizationId),
+  fetchStatus: selectOrganizationFetchStatus(state, organizationId),
+});

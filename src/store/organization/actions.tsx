@@ -9,7 +9,7 @@ import {
   removeOrganization,
 } from "../../api/api";
 import { fetchOrganizations } from "../organizationContext/actions";
-import { alert, alertFetchEndpoint } from "../alert/actions";
+import { alert } from "../alert/actions";
 
 interface OrganizationActionMeta {
   organizationId: string;
@@ -83,7 +83,6 @@ export const fetchOrganization = (organizationId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -104,7 +103,6 @@ export const requestCreateOrganization = (
       })
       .catch((err: AxiosError) => {
         dispatch(createOrganizationFailure(err));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -133,7 +131,6 @@ export const requestUpdateOrganization = (
       })
       .catch((err: AxiosError) => {
         dispatch(updateOrganizationFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -158,7 +155,6 @@ export const deleteOrganization = (organizationId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(deleteOrganizationFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

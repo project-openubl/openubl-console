@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
-import { alert, alertFetchEndpoint } from "../alert/actions";
+import { alert } from "../alert/actions";
 import { ComponentRepresentation } from "../../models/api";
 import {
   getOrganizationComponent,
@@ -81,7 +81,6 @@ export const fetchComponent = (organizationId: string, componentId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchComponentFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -107,7 +106,6 @@ export const requestCreateComponent = (
       })
       .catch((err: AxiosError) => {
         dispatch(createComponentFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -134,7 +132,6 @@ export const requestUpdateComponent = (
       })
       .catch((err: AxiosError) => {
         dispatch(updateComponentFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -154,14 +151,13 @@ export const requestDeleteComponent = (
       .then((res: AxiosResponse) => {
         dispatch(deleteComponentSuccess(res.data, meta));
         alert({
-          title: `Eliminado satisfactoriamente`,
-          description: `Componente ${componentId} eliminado`,
+          title: `Deleted`,
+          description: `Component ${componentId} was deleted`,
           variant: "success",
         })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(updateComponentFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

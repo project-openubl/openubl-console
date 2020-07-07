@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { KeyList } from "./KeyList";
+import { KeyList, KeyListOwnProps } from "./KeyList";
 import { createMapStateToProps } from "../../../store/common";
 import {
   organizationActions,
@@ -21,58 +21,34 @@ import {
 } from "../../../store/serverInfo";
 import { deleteDialogActions } from "../../../store/deleteDialog";
 
-const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
-  organization: organizationSelectors.selectOrganization(
-    state,
-    ownProps.organizationId
-  ),
-  organizationError: organizationSelectors.selectOrganizationError(
-    state,
-    ownProps.organizationId
-  ),
-  organizationFetchStatus: organizationSelectors.selectOrganizationFetchStatus(
-    state,
-    ownProps.organizationId
-  ),
-  organizationKeys: organizationKeysSelectors.selectOrganizationKeys(
-    state,
-    ownProps.organizationId
-  ),
-  organizationKeysFetchStatus: organizationKeysSelectors.selectOrganizationKeysFetchStatus(
-    state,
-    ownProps.organizationId
-  ),
-  organizationKeysError: organizationKeysSelectors.selectOrganizationKeysError(
-    state,
-    ownProps.organizationId
-  ),
-  organizationComponents: organizationComponentsSelectors.selectOrganizationComponents(
-    state,
-    ownProps.organizationId
-  ),
-  organizationComponentsFetchStatus: organizationComponentsSelectors.selectOrganizationComponentsFetchStatus(
-    state,
-    ownProps.organizationId
-  ),
-  organizationComponentsError: organizationComponentsSelectors.selectOrganizationComponentsError(
-    state,
-    ownProps.organizationId
-  ),
-  serverInfo: serverInfoSelectors.selectServerInfo(state),
-  serverInfoFetchStatus: serverInfoSelectors.selectServerInfoFetchStatus(state),
-  serverInfoError: serverInfoSelectors.selectServerInfoError(state),
-}));
+const mapStateToProps = createMapStateToProps(
+  (state, ownProps: KeyListOwnProps) => ({
+    organization: organizationSelectors.selectOrganizationData(
+      state,
+      ownProps.organizationId
+    ),
+    keys: organizationKeysSelectors.selectKeysData(
+      state,
+      ownProps.organizationId
+    ),
+    components: organizationComponentsSelectors.selectComponentsData(
+      state,
+      ownProps.organizationId
+    ),
+    serverInfo: serverInfoSelectors.selectServerInfoData(state),
+  })
+);
 
 const mapDispatchToProps = {
   fetchOrganization: organizationActions.fetchOrganization,
   updateOrganization: organizationActions.requestUpdateOrganization,
-  fetchOrganizationKeys: organizationKeysActions.fetchOrganizationKeys,
-  fetchOrganizationComponents:
-    organizationComponentsActions.fetchOrganizationComponents,
-  requestDeleteComponent: componentActions.requestDeleteComponent,
+  fetchKeys: organizationKeysActions.fetchOrganizationKeys,
+  fetchComponents: organizationComponentsActions.fetchOrganizationComponents,
+  deleteComponent: componentActions.requestDeleteComponent,
   fetchServerInfo: serverInfoActions.fetchServerInfo,
   showDeleteDialog: deleteDialogActions.openModal,
   closeDeleteDialog: deleteDialogActions.closeModal,
+  processingDeleteDialog: deleteDialogActions.processing,
 };
 
 export default withRouter(

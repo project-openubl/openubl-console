@@ -1,16 +1,18 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
-import { createAction } from "typesafe-actions";
+import { createAsyncAction } from "typesafe-actions";
 import { ServerInfoRepresentation } from "../../models/api";
 import { getServerInfo } from "../../api/api";
 
-export const fetchServerInfoRequest = createAction("serverInfoFetch/request")();
-export const fetchServerInfoSuccess = createAction("serverInfoFetch/success")<
-  ServerInfoRepresentation
->();
-export const fetchServerInfoFailure = createAction("serverInfoFetch/failure")<
-  AxiosError
->();
+export const {
+  request: fetchServerInfoRequest,
+  success: fetchServerInfoSuccess,
+  failure: fetchServerInfoFailure,
+} = createAsyncAction(
+  "serverInfo/fetch/fetch/request",
+  "serverInfo/fetch/success",
+  "serverInfo/fetch/failure"
+)<void, ServerInfoRepresentation, AxiosError>();
 
 export const fetchServerInfo = () => {
   return (dispatch: Dispatch) => {

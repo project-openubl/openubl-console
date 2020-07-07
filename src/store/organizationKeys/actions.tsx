@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
-import { alertFetchEndpoint } from "../alert/actions";
 import { KeysMetadataRepresentation } from "../../models/api";
 import { getOrganizationKeys } from "../../api/api";
 
@@ -31,11 +30,9 @@ export const fetchOrganizationKeys = (organizationId: string) => {
       .then((res: AxiosResponse<KeysMetadataRepresentation>) => {
         const keysMetadata: KeysMetadataRepresentation = res.data;
         dispatch(fetchOrganizationKeysSuccess(keysMetadata, meta));
-        return keysMetadata;
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationKeysFailure(err, meta));
-        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
