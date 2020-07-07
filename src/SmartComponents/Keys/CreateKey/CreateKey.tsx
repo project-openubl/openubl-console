@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { AxiosError } from "axios";
 import { Card, CardBody, GridItem, Grid } from "@patternfly/react-core";
 import {
   ServerInfoRepresentation,
   ComponentTypeRepresentation,
   ComponentRepresentation,
 } from "../../../models/api";
-import { FetchStatus } from "../../../store/common";
+import { ObjectData } from "../../../store/common";
 import { KeyForm } from "../../../PresentationalComponents/PageOrganizationContext/PageKeys/Forms/KeyForm";
 import { AppRouterProps } from "../../../models/routerProps";
 
 interface StateToProps {
-  serverInfo: ServerInfoRepresentation | undefined;
-  serverInfoFetchStatus: FetchStatus | undefined;
-  serverInfoError: AxiosError | undefined;
+  serverInfo: ObjectData<ServerInfoRepresentation>;
 }
 
 interface DispatchToProps {
   fetchServerInfo: () => void;
-  requestCreateComponent: (
+  createComponent: (
     organizationId: string,
     component: ComponentRepresentation
   ) => Promise<void>;
@@ -32,10 +29,10 @@ interface KeyListProps extends StateToProps, DispatchToProps, AppRouterProps {
 export const CreateKey: React.FC<KeyListProps> = ({
   organizationId,
   providerId,
-  serverInfo,
+  serverInfo: { data: serverInfoData },
   history: { push },
   fetchServerInfo,
-  requestCreateComponent,
+  createComponent,
 }) => {
   const [componentType, setComponentType] = useState<
     ComponentTypeRepresentation
@@ -46,8 +43,8 @@ export const CreateKey: React.FC<KeyListProps> = ({
   }, [fetchServerInfo]);
 
   useEffect(() => {
-    if (serverInfo) {
-      const keyProviders = serverInfo.componentTypes.keyProviders;
+    if (serverInfoData) {
+      const keyProviders = serverInfoData.componentTypes.keyProviders;
       for (let i = 0; i < keyProviders.length; i++) {
         const provider = keyProviders[i];
         if (provider.id === providerId) {
@@ -55,7 +52,7 @@ export const CreateKey: React.FC<KeyListProps> = ({
         }
       }
     }
-  }, [providerId, serverInfo]);
+  }, [providerId, serverInfoData]);
 
   const onSubmit = async (values: any) => {
     const { name, ...restValues } = values;
@@ -73,7 +70,7 @@ export const CreateKey: React.FC<KeyListProps> = ({
       ),
     };
 
-    await requestCreateComponent(organizationId, payload);
+    await createComponent(organizationId, payload);
     push(`/server/org/${organizationId}/keys`);
   };
 

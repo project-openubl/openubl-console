@@ -17,7 +17,7 @@ export const PageCreateKey: React.FC<PageCreateKeyProps> = ({
     <React.Fragment>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Text component="h1">Crear certificado</Text>
+          <Text component="h1">Create Key</Text>
         </TextContent>
       </PageSection>
       <PageSection>

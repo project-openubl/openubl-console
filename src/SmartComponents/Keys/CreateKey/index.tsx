@@ -9,14 +9,12 @@ import { componentActions } from "../../../store/organizationComponent";
 import { withRouter } from "react-router-dom";
 
 const mapStateToProps = createMapStateToProps((state) => ({
-  serverInfo: serverInfoSelectors.selectServerInfo(state),
-  serverInfoFetchStatus: serverInfoSelectors.selectServerInfoFetchStatus(state),
-  serverInfoError: serverInfoSelectors.selectServerInfoError(state),
+  serverInfo: serverInfoSelectors.selectServerInfoData(state),
 }));
 
 const mapDispatchToProps = {
   fetchServerInfo: serverInfoActions.fetchServerInfo,
-  requestCreateComponent: componentActions.requestCreateComponent,
+  createComponent: componentActions.requestCreateComponent,
 };
 
 export default withRouter(

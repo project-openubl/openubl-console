@@ -91,7 +91,7 @@ export const KeyForm: React.FC<KeyFormProps> = ({
     fields: [
       {
         name: "name",
-        label: "Nombre",
+        label: "Name",
         component: componentTypes.TEXT_FIELD,
         isRequired: true,
         initialValue: componentType.id,
