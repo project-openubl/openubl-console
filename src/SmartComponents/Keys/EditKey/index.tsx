@@ -10,6 +10,7 @@ import {
   componentActions,
 } from "../../../store/organizationComponent";
 import { withRouter } from "react-router-dom";
+import { alertActions } from "../../../store/alert";
 
 const mapStateToProps = createMapStateToProps((state, ownPros: any) => ({
   serverInfo: serverInfoSelectors.selectServerInfo(state),
@@ -26,7 +27,7 @@ const mapStateToProps = createMapStateToProps((state, ownPros: any) => ({
 const mapDispatchToProps = {
   fetchServerInfo: serverInfoActions.fetchServerInfo,
   fetchComponent: componentActions.fetchComponent,
-  updateComponent: componentActions.requestUpdateComponent,
+  alert: alertActions.alert,
 };
 
 export default withRouter(

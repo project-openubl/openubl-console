@@ -14,12 +14,12 @@ import {
   organizationComponentsActions,
   organizationComponentsSelectors,
 } from "../../../store/organizationComponents";
-import { componentActions } from "../../../store/organizationComponent";
 import {
   serverInfoSelectors,
   serverInfoActions,
 } from "../../../store/serverInfo";
 import { deleteDialogActions } from "../../../store/deleteDialog";
+import { alertActions } from "../../../store/alert";
 
 const mapStateToProps = createMapStateToProps(
   (state, ownProps: KeyListOwnProps) => ({
@@ -41,14 +41,13 @@ const mapStateToProps = createMapStateToProps(
 
 const mapDispatchToProps = {
   fetchOrganization: organizationActions.fetchOrganization,
-  updateOrganization: organizationActions.requestUpdateOrganization,
   fetchKeys: organizationKeysActions.fetchOrganizationKeys,
   fetchComponents: organizationComponentsActions.fetchOrganizationComponents,
-  deleteComponent: componentActions.requestDeleteComponent,
   fetchServerInfo: serverInfoActions.fetchServerInfo,
   showDeleteDialog: deleteDialogActions.openModal,
   closeDeleteDialog: deleteDialogActions.closeModal,
   processingDeleteDialog: deleteDialogActions.processing,
+  alert: alertActions.alert,
 };
 
 export default withRouter(

@@ -35,6 +35,8 @@ import { deleteDialogActions } from "../../../store/deleteDialog";
 import { AppRouterProps } from "../../../models/routerProps";
 import { FilterToolbarItem } from "../../../PresentationalComponents/Components/FilterToolbarItem";
 import { debouncedFetch } from "../../../utils/debounce";
+import { AlertModel } from "../../../models/alert";
+import { deleteOrganization } from "../../../api/api";
 
 interface StateToProps {
   organizations: PaginationResponseRepresentation<OrganizationRepresentation>;
@@ -48,9 +50,9 @@ interface DispatchToProps {
     page: number,
     pageSize: number
   ) => Promise<void>;
-  deleteOrganization: (organizationId: string) => Promise<void>;
   showDeleteDialog: typeof deleteDialogActions.openModal;
   closeDeleteDialog: typeof deleteDialogActions.closeModal;
+  addAlert: (alert: AlertModel) => void;
 }
 
 interface Props extends StateToProps, DispatchToProps, AppRouterProps {}
@@ -139,11 +141,7 @@ export class OrganizationList extends React.Component<Props, State> {
   };
 
   handleEliminar = (event: React.MouseEvent, rowIndex: number) => {
-    const {
-      showDeleteDialog,
-      closeDeleteDialog,
-      deleteOrganization,
-    } = this.props;
+    const { showDeleteDialog, closeDeleteDialog, addAlert } = this.props;
 
     const { organizations } = this.props;
     const organization = organizations.data[rowIndex];
@@ -152,10 +150,24 @@ export class OrganizationList extends React.Component<Props, State> {
       name: organization.name,
       type: "organización",
       onDelete: () => {
-        deleteOrganization(organization.id).then(() => {
-          closeDeleteDialog();
-          this.refreshData();
-        });
+        deleteOrganization(organization.id)
+          .then(() => {
+            closeDeleteDialog();
+            addAlert({
+              variant: "success",
+              title: "Success",
+              description: "Organization deleted successfully",
+            });
+
+            this.refreshData();
+          })
+          .catch(() => {
+            addAlert({
+              variant: "danger",
+              title: "Error",
+              description: "Error while deleting organization",
+            });
+          });
       },
       onCancel: () => {
         closeDeleteDialog();

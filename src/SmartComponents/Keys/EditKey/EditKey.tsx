@@ -9,6 +9,7 @@ import {
 import { FetchStatus } from "../../../store/common";
 import { KeyForm } from "../../../PresentationalComponents/PageOrganizationContext/PageKeys/Forms/KeyForm";
 import { AppRouterProps } from "../../../models/routerProps";
+import { AlertModel } from "../../../models/alert";
 
 interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;
@@ -22,10 +23,7 @@ interface StateToProps {
 interface DispatchToProps {
   fetchServerInfo: () => void;
   fetchComponent: (organizationId: string, componentId: string) => void;
-  updateComponent: (
-    organizationId: string,
-    component: ComponentRepresentation
-  ) => void;
+  alert: (alert: AlertModel) => void;
 }
 
 interface EditKeyProps extends StateToProps, DispatchToProps, AppRouterProps {
@@ -43,7 +41,7 @@ export const EditKey: React.FC<EditKeyProps> = ({
   history: { push },
   fetchServerInfo,
   fetchComponent,
-  updateComponent,
+  alert,
 }) => {
   const [componentType, setComponentType] = useState<
     ComponentTypeRepresentation

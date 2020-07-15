@@ -3,11 +3,12 @@ import { Card, CardBody, GridItem, Grid } from "@patternfly/react-core";
 import {
   ServerInfoRepresentation,
   ComponentTypeRepresentation,
-  ComponentRepresentation,
 } from "../../../models/api";
 import { ObjectData } from "../../../store/common";
 import { KeyForm } from "../../../PresentationalComponents/PageOrganizationContext/PageKeys/Forms/KeyForm";
 import { AppRouterProps } from "../../../models/routerProps";
+import { createOrganizationComponent } from "../../../api/api";
+import { AlertModel } from "../../../models/alert";
 
 interface StateToProps {
   serverInfo: ObjectData<ServerInfoRepresentation>;
@@ -15,10 +16,7 @@ interface StateToProps {
 
 interface DispatchToProps {
   fetchServerInfo: () => void;
-  createComponent: (
-    organizationId: string,
-    component: ComponentRepresentation
-  ) => Promise<void>;
+  alert: (alert: AlertModel) => void;
 }
 
 interface KeyListProps extends StateToProps, DispatchToProps, AppRouterProps {
@@ -32,7 +30,7 @@ export const CreateKey: React.FC<KeyListProps> = ({
   serverInfo: { data: serverInfoData },
   history: { push },
   fetchServerInfo,
-  createComponent,
+  alert,
 }) => {
   const [componentType, setComponentType] = useState<
     ComponentTypeRepresentation
@@ -70,8 +68,22 @@ export const CreateKey: React.FC<KeyListProps> = ({
       ),
     };
 
-    await createComponent(organizationId, payload);
-    push(`/server/org/${organizationId}/keys`);
+    try {
+      await createOrganizationComponent(organizationId, payload);
+      push(`/server/org/${organizationId}/keys`);
+
+      alert({
+        variant: "success",
+        title: "Success",
+        description: "Component created successfully",
+      });
+    } catch (e) {
+      alert({
+        variant: "danger",
+        title: "Error",
+        description: "Error while creating component",
+      });
+    }
   };
 
   const onCancel = () => {

@@ -43,6 +43,11 @@ import { ObjectData } from "../../../store/common";
 import { getMapKeys, getMapValues } from "../../../utils/utils";
 import { deleteDialogActions } from "../../../store/deleteDialog";
 import { AppRouterProps } from "../../../models/routerProps";
+import { AlertModel } from "../../../models/alert";
+import {
+  updateOrganization,
+  deleteOrganizationComponent,
+} from "../../../api/api";
 
 interface StateToProps {
   organization: ObjectData<OrganizationRepresentation>;
@@ -53,20 +58,13 @@ interface StateToProps {
 
 interface DispatchToProps {
   fetchOrganization: (organizationId: string) => Promise<void>;
-  updateOrganization: (
-    organizationId: string,
-    organization: OrganizationRepresentation
-  ) => Promise<void>;
   fetchKeys: (organizationId: string) => Promise<void>;
   fetchComponents: (organizationId: string) => Promise<void>;
-  deleteComponent: (
-    organizationId: string,
-    componentId: string
-  ) => Promise<void>;
   fetchServerInfo: () => Promise<void>;
   showDeleteDialog: typeof deleteDialogActions.openModal;
   closeDeleteDialog: typeof deleteDialogActions.closeModal;
   processingDeleteDialog: typeof deleteDialogActions.processing;
+  alert: (alert: AlertModel) => void;
 }
 
 export interface KeyListOwnProps {
@@ -86,10 +84,8 @@ export const KeyList: React.FC<KeyListProps> = ({
   components: { data: componentsData },
   serverInfo: { data: serverInfoData },
   fetchOrganization,
-  updateOrganization,
   fetchKeys,
   fetchComponents,
-  deleteComponent,
   fetchServerInfo,
   showDeleteDialog,
   closeDeleteDialog,
@@ -157,7 +153,22 @@ export const KeyList: React.FC<KeyListProps> = ({
       useCustomCertificates: checked,
     } as OrganizationRepresentation;
 
-    updateOrganization(organizationId, data);
+    updateOrganization(organizationId, data)
+      .then(() => {
+        alert({
+          variant: "success",
+          title: "Success",
+          description: "Organization updated",
+        });
+      })
+      .catch(() => {
+        alert({
+          variant: "danger",
+          title: "Error",
+          description: "Error updating organization",
+        });
+      });
+
     setIsSwitchChecked(checked);
   };
 
@@ -167,13 +178,27 @@ export const KeyList: React.FC<KeyListProps> = ({
       type: "component",
       onDelete: () => {
         processingDeleteDialog();
-        deleteComponent(organizationId, component.id).then(() => {
-          closeDeleteDialog();
 
-          // Fetch keys and components again
-          fetchKeys(organizationId);
-          fetchComponents(organizationId);
-        });
+        deleteOrganizationComponent(organizationId, component.id)
+          .then(() => {
+            closeDeleteDialog();
+            alert({
+              variant: "success",
+              title: "Success",
+              description: "Component deleted successfully",
+            });
+
+            // Fetch keys and components again
+            fetchKeys(organizationId);
+            fetchComponents(organizationId);
+          })
+          .catch(() => {
+            alert({
+              variant: "danger",
+              title: "Error",
+              description: "Error deleting component",
+            });
+          });
       },
       onCancel: () => {
         closeDeleteDialog();

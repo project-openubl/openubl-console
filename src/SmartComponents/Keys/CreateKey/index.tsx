@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 import { CreateKey } from "./CreateKey";
+import { withRouter } from "react-router-dom";
 import { createMapStateToProps } from "../../../store/common";
 import {
   serverInfoSelectors,
   serverInfoActions,
 } from "../../../store/serverInfo";
-import { componentActions } from "../../../store/organizationComponent";
-import { withRouter } from "react-router-dom";
+import { alertActions } from "../../../store/alert";
 
 const mapStateToProps = createMapStateToProps((state) => ({
   serverInfo: serverInfoSelectors.selectServerInfoData(state),
@@ -14,7 +14,7 @@ const mapStateToProps = createMapStateToProps((state) => ({
 
 const mapDispatchToProps = {
   fetchServerInfo: serverInfoActions.fetchServerInfo,
-  createComponent: componentActions.requestCreateComponent,
+  alert: alertActions.alert,
 };
 
 export default withRouter(

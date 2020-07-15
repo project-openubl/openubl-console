@@ -77,7 +77,7 @@ export const updateOrganization = (
   );
 };
 
-export const removeOrganization = (organizationId: string) => {
+export const deleteOrganization = (organizationId: string) => {
   return ApiClient.delete(`${ORGS}/${organizationId}`);
 };
 

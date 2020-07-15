@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { CreateOrganization } from "./CreateOrganization";
 import { createMapStateToProps } from "../../../store/common";
-import { organizationActions } from "../../../store/organization";
 import { alertActions } from "../../../store/alert";
 import {
   wsTemplatesSelectors,
@@ -16,7 +15,6 @@ const mapStateToProps = createMapStateToProps((state) => ({
 }));
 
 const mapDispatchToProps = {
-  createOrganization: organizationActions.requestCreateOrganization,
   addAlert: alertActions.alert,
   fetchAllTemplates: wsTemplatesActions.fetchAllWSTemplates,
 };

@@ -13,18 +13,17 @@ import { ComponentRepresentation } from "../../../models/api";
 import { ResourceBadge } from "../../../PresentationalComponents/Components/ResourceBadge";
 import { AppRouterProps } from "../../../models/routerProps";
 import { deleteDialogActions } from "../../../store/deleteDialog";
+import { AlertModel } from "../../../models/alert";
+import { deleteOrganizationComponent } from "../../../api/api";
 
 interface StateToProps {
   component: ComponentRepresentation | undefined;
 }
 
 interface DispatchToProps {
-  deleteComponent: (
-    organizationId: string,
-    componentId: string
-  ) => Promise<void>;
   showDeleteDialog: typeof deleteDialogActions.openModal;
   closeDeleteDialog: typeof deleteDialogActions.closeModal;
+  alert: (alert: AlertModel) => void;
 }
 
 export interface KeyPageSectionProps
@@ -39,7 +38,7 @@ export const KeyPageSection: React.FC<KeyPageSectionProps> = ({
   component,
   showDeleteDialog,
   closeDeleteDialog,
-  deleteComponent,
+  alert,
   history: { push },
 }) => {
   const onDelete = () => {
@@ -48,10 +47,24 @@ export const KeyPageSection: React.FC<KeyPageSectionProps> = ({
         name: component.name,
         type: "organización",
         onDelete: () => {
-          deleteComponent(organizationId, component.id).then(() => {
-            closeDeleteDialog();
-            push(`/server/org/${organizationId}/keys`);
-          });
+          deleteOrganizationComponent(organizationId, component.id)
+            .then(() => {
+              closeDeleteDialog();
+              alert({
+                variant: "success",
+                title: "Success",
+                description: "Component deleted successfully",
+              });
+
+              push(`/server/org/${organizationId}/keys`);
+            })
+            .catch(() => {
+              alert({
+                variant: "danger",
+                title: "Error",
+                description: "Error while deleting component",
+              });
+            });
         },
         onCancel: () => {
           closeDeleteDialog();

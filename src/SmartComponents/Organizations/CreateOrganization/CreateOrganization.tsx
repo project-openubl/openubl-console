@@ -15,6 +15,7 @@ import {
 import { AlertModel } from "../../../models/alert";
 import { FetchStatus } from "../../../store/common";
 import { SunatForm } from "../../../PresentationalComponents/PageOrganizations/Forms/SunatForm";
+import { createOrganization } from "../../../api/api";
 
 interface StateToProps {
   wsTemplates: WSTemplateRepresentation[] | undefined;
@@ -23,9 +24,6 @@ interface StateToProps {
 }
 
 interface DispatchToProps {
-  createOrganization: (
-    organization: OrganizationRepresentation
-  ) => Promise<void>;
   addAlert: (alert: AlertModel) => void;
   fetchAllTemplates: () => Promise<void>;
 }
@@ -35,7 +33,6 @@ export interface Props extends StateToProps, DispatchToProps, AppRouterProps {}
 export const CreateOrganization: React.FC<Props> = ({
   history: { push },
   addAlert,
-  createOrganization,
   wsTemplates,
   fetchAllTemplates,
 }) => {
@@ -135,7 +132,20 @@ export const CreateOrganization: React.FC<Props> = ({
       },
     };
 
-    await createOrganization(organizationData);
+    try {
+      await createOrganization(organizationData);
+      addAlert({
+        variant: "success",
+        title: "Success",
+        description: "Organization created",
+      });
+    } catch (e) {
+      addAlert({
+        variant: "danger",
+        title: "Error",
+        description: "Error while creating organization",
+      });
+    }
   };
 
   const onCancel = () => {

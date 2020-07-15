@@ -10,6 +10,8 @@ import { AppRouterProps } from "../../../../models/routerProps";
 import { ArticleSkeleton } from "../../../../PresentationalComponents/Components/Skeleton/ArticleSkeleton";
 import { OrganizationFormData } from "../../../../models/ui";
 import { SunatForm } from "../../../../PresentationalComponents/PageOrganizations/Forms/SunatForm";
+import { AlertModel } from "../../../../models/alert";
+import { updateOrganization } from "../../../../api/api";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
@@ -22,11 +24,8 @@ interface StateToProps {
 
 interface DispatchToProps {
   fetchOrganization: (organizationId: string) => Promise<void>;
-  updateOrganization: (
-    organizationId: string,
-    organization: OrganizationRepresentation
-  ) => Promise<void>;
   fetchAllTemplates: () => Promise<void>;
+  addAlert: (alert: AlertModel) => void;
 }
 
 interface SunatProps extends StateToProps, DispatchToProps, AppRouterProps {
@@ -39,7 +38,7 @@ export const Sunat: React.FC<SunatProps> = ({
   organizationFetchStatus,
   organizationError,
   fetchOrganization,
-  updateOrganization,
+  addAlert,
   wsTemplates,
   fetchAllTemplates,
 }) => {
@@ -101,7 +100,20 @@ export const Sunat: React.FC<SunatProps> = ({
         },
       };
 
-      await updateOrganization(organizationId, data);
+      try {
+        await updateOrganization(organizationId, data);
+        addAlert({
+          variant: "success",
+          title: "Success",
+          description: "Organization updated successfully",
+        });
+      } catch (e) {
+        addAlert({
+          variant: "danger",
+          title: "Error",
+          description: "Error while updating organization",
+        });
+      }
     }
   };
 

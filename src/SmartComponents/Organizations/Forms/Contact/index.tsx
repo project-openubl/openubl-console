@@ -6,6 +6,7 @@ import {
   organizationActions,
   organizationSelectors,
 } from "../../../../store/organization";
+import { alertActions } from "../../../../store/alert";
 
 const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
   organization: organizationSelectors.selectOrganization(
@@ -24,7 +25,7 @@ const mapStateToProps = createMapStateToProps((state, ownProps: any) => ({
 
 const mapDispatchToProps = {
   fetchOrganization: organizationActions.fetchOrganization,
-  updateOrganization: organizationActions.requestUpdateOrganization,
+  addAlert: alertActions.alert,
 };
 
 export default withRouter(

@@ -10,15 +10,17 @@ import { ResourceBadge } from "../../../PresentationalComponents/Components/Reso
 import { OrganizationActions } from "../../../PresentationalComponents/PageOrganizations/Forms/OrganizationActions/OrganizationActions";
 import { AppRouterProps } from "../../../models/routerProps";
 import { deleteDialogActions } from "../../../store/deleteDialog";
+import { AlertModel } from "../../../models/alert";
+import { deleteOrganization } from "../../../api/api";
 
 interface StateToProps {
   organization: OrganizationRepresentation | undefined;
 }
 
 interface DispatchToProps {
-  deleteOrganization: (organizationId: string) => Promise<void>;
   showDeleteDialog: typeof deleteDialogActions.openModal;
   closeDeleteDialog: typeof deleteDialogActions.closeModal;
+  addAlert: (alert: AlertModel) => void;
 }
 
 export interface OrganizationPageSectionProps
@@ -32,7 +34,7 @@ export const OrganizationPageSection: React.FC<OrganizationPageSectionProps> = (
   organization,
   showDeleteDialog,
   closeDeleteDialog,
-  deleteOrganization,
+  addAlert,
   history: { push },
 }) => {
   const onOrganizationEdit = () => {
@@ -49,10 +51,22 @@ export const OrganizationPageSection: React.FC<OrganizationPageSectionProps> = (
         onDelete: () => {
           deleteOrganization(organization.id).then(() => {
             closeDeleteDialog();
+            addAlert({
+              variant: "success",
+              title: "Success",
+              description: "Organization deleted successfully",
+            });
+
             push("/");
           });
         },
         onCancel: () => {
+          addAlert({
+            variant: "danger",
+            title: "Error",
+            description: "Error while deleting organization",
+          });
+
           closeDeleteDialog();
         },
       });
