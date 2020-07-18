@@ -56,7 +56,8 @@
     "package-win": "npm run build && npm run build-electron-win && electron-builder build -c.extraMetadata.main=build/electron/main.js --publish never",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "chromatic": "npx chromatic"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -87,6 +88,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
     "@types/redux-logger": "^3.0.8",
+    "chromatic": "^5.0.0",
     "electron": "^9.0.2",
     "electron-builder": "^22.7.0",
     "node-sass": "^4.14.1",
